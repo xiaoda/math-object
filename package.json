@@ -1,0 +1,24 @@
+{
+  "name": "math-object",
+  "version": "0.0.0",
+  "description": "an object oriented math library for js",
+  "main": "index.js",
+  "scripts": {
+    "start": "NODE_ENV='dev' webpack-dev-server --config build/webpack.dev.config.js",
+    "build": "NODE_ENV='prod' webpack --config build/webpack.prod.config.js",
+    "prebuild": "npm run clear",
+    "clear": "rm -rf dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xiaoda/math-object.git"
+  },
+  "keywords": [
+    "js",
+    "math",
+    "math object",
+    "mo"
+  ],
+  "author": "xiaoda",
+  "license": "MIT"
+}
