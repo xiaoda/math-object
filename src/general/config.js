@@ -14,7 +14,7 @@ let config = {
 
   isNotDev () {
     return ENV !== DEV
-  },
+  }
 
 }
 

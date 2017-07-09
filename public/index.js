@@ -1,3 +1,3 @@
-import MO from '../src'
+import mo from '../src'
 
-console.log(MO)
+mo('-1')

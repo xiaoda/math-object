@@ -22,7 +22,7 @@
   "author": "xiaoda",
   "license": "MIT",
   "dependencies": {
-    "xdhelper": "^0.1.0"
+    "xdhelper": "^0.2.0"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
@@ -33,6 +33,7 @@
     "eslint": "^4.1.1",
     "eslint-config-standard": "^10.2.1",
     "eslint-friendly-formatter": "^3.0.0",
+    "eslint-import-resolver-node": "^0.3.1",
     "eslint-loader": "^1.9.0",
     "eslint-plugin-html": "^3.0.0",
     "eslint-plugin-import": "^2.7.0",

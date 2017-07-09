@@ -10,10 +10,14 @@ module.exports = {
     browser: true,
   },
   // https://github.com/feross/standard/blob/master/RULES.md#javascript-standard-style
-  extends: 'standard',
+  extends: [
+    'standard',
+    'plugin:import/errors',
+    'plugin:import/warnings',
+  ],
   // required to lint *.vue files
   plugins: [
-    'html'
+    'html', 'import'
   ],
   // add your custom rules here
   rules: {
@@ -27,6 +31,8 @@ module.exports = {
     'no-unused-vars': 0,
   },
   globals: {
-    config: true
+    config: true,
+    helper: true,
+    C: true,
   }
 }
