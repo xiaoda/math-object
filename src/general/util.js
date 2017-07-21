@@ -119,7 +119,7 @@ const util = {
       let counts = divisors.map((arr) => helper.countArrItem(arr, num))
       commonDivisors.push(...new Array(Math.min(...counts)).fill(num))
     })
-    return commonDivisors.length ? commonDivisors.reduce((sum, val) => sum * val) : 0
+    return commonDivisors.length ? commonDivisors.reduce((sum, val) => sum * val) : 1
   },
 
   /* 获取最小公倍数 */
@@ -135,7 +135,7 @@ const util = {
       let counts = divisors.map((arr) => helper.countArrItem(arr, num))
       allDivisors.push(...new Array(Math.max(...counts)).fill(num))
     })
-    return allDivisors.length ? allDivisors.reduce((sum, val) => sum * val) : 0
+    return allDivisors.length ? allDivisors.reduce((sum, val) => sum * val) : 1
   }
 }
 

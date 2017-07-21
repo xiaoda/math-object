@@ -14,8 +14,8 @@ const moFraction = (...args) => {
     }
     return new MoNumber(options)
   } else {
-    let numerator = args[0] || 1
-    let denominator = args[1] || 1
+    let numerator = helper.isUndefined(args[0]) ? 1 : args[0]
+    let denominator = helper.isUndefined(args[1]) ? 1 : args[1]
     let signs = [util.getSign(numerator), util.getSign(denominator)]
     let sign
     if (helper.chain(signs, ['countArrItem', 'zero'], 'toBool')) sign = 'zero'

@@ -60,7 +60,28 @@ class MoNumber extends MoBase {
     return {numerator, denominator}
   }
 
-  /* 获取数字的值 */
+  /* 获取绝对值 */
+  getAbsoluteVal () {
+    let options = {...this.props}
+    let signMap = {
+      negative: 'positive'
+    }
+    options.sign = signMap[options.sign] || options.sign
+    return new MoNumber(options)
+  }
+
+  /* 获取相反数 */
+  getOppositeNum () {
+    let options = {...this.props}
+    let signMap = {
+      positive: 'negative',
+      negative: 'positive'
+    }
+    options.sign = signMap[options.sign] || options.sign
+    return new MoNumber(options)
+  }
+
+  /* 获取值 */
   getVal () {
     let {sign, numerator, denominator} = this.props
     return numerator / denominator * (['positive', 'zero'].includes(sign) ? 1 : -1)
