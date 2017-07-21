@@ -5,10 +5,8 @@
 import MoBase from './base'
 
 class MoNumber extends MoBase {
-  constructor (inputNum) {
+  constructor (input) {
     super()
-    let numText = util.parseNumText(inputNum)
-    if (!util.checkNumLegal(numText)) return
 
     /* 默认属性 */
     this.props = {
@@ -16,6 +14,20 @@ class MoNumber extends MoBase {
       numerator: null,  // 分子
       denominator: null // 分母
     }
+
+    if (helper.isObj(input)) {
+      let options = input
+      options.numerator = util.parseNum(options.numerator)
+      options.denominator = util.parseNum(options.denominator)
+      let fraction = this._optimizeFraction(options.numerator, options.denominator)
+      options.numerator = fraction.numerator
+      options.denominator = fraction.denominator
+      this.setProp(options)
+      return
+    }
+
+    if (!util.checkNumLegal(input)) return
+    let numText = util.parseNumText(input)
 
     numText = this._handleSign(numText)
     numText = this._handleFraction(numText)
@@ -25,19 +37,33 @@ class MoNumber extends MoBase {
   _handleSign (numText) {
     let sign = util.getSign(numText)
     this.setProp({sign})
-    return util.dropSign(numText)
+    return helper.toStr(util.dropSign(numText))
   }
 
   /* 处理分数 */
   _handleFraction (numText) {
-    let decimalDigit = util.getDecimalDigit(numText)
-    let numerator = helper.multiply(helper.toNum(numText), 10, decimalDigit)
-    let denominator = helper.multiply(1, 10, decimalDigit)
+    let fraction = this._optimizeFraction(helper.toNum(numText), 1)
+    let numerator = fraction.numerator
+    let denominator = fraction.denominator
+    this.setProp({numerator, denominator})
+    return numText
+  }
+
+  /* 优化分子和分母 */
+  _optimizeFraction (numerator, denominator) {
+    let decimalDigit = Math.max(util.getDecimalDigit(numerator), util.getDecimalDigit(denominator))
+    numerator = helper.multiply(numerator, 10, decimalDigit)
+    denominator = helper.multiply(denominator, 10, decimalDigit)
     let greatestCommonDivisor = util.getGreatestCommonDivisor(numerator, denominator)
     numerator /= greatestCommonDivisor
     denominator /= greatestCommonDivisor
-    this.setProp({numerator, denominator})
-    return numText
+    return {numerator, denominator}
+  }
+
+  /* 获取数字的值 */
+  getVal () {
+    let {sign, numerator, denominator} = this.props
+    return numerator / denominator * (['positive', 'zero'].includes(sign) ? 1 : -1)
   }
 }
 

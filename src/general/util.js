@@ -53,7 +53,7 @@ const util = {
   /* 去掉符号 */
   dropSign (inputNum) {
     let numText = this.parseNumText(inputNum)
-    return numText.replace(rules.sign, '')
+    return helper.toNum(numText.replace(rules.sign, ''))
   },
 
   /* 判断是否为零 */

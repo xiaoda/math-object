@@ -1,3 +1,4 @@
 import mo from '../src'
 
-C(mo(0.25))
+let num = mo.fraction(-2, -4)
+console.log(num)
