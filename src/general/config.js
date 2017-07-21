@@ -6,7 +6,7 @@ const ENV = process.env.NODE_ENV
 const DEV = 'dev'
 const PROD = 'prod'
 
-let config = {
+const config = {
 
   isDev () {
     return ENV === DEV

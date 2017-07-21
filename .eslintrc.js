@@ -11,9 +11,7 @@ module.exports = {
   },
   // https://github.com/feross/standard/blob/master/RULES.md#javascript-standard-style
   extends: [
-    'standard',
-    'plugin:import/errors',
-    'plugin:import/warnings',
+    'standard'
   ],
   // required to lint *.vue files
   plugins: [
@@ -29,10 +27,13 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
     // allow unused variables
     'no-unused-vars': 0,
+    // alow multi spaces
+    'no-multi-spaces': 0
   },
   globals: {
     config: true,
     helper: true,
-    C: true,
+    util: true,
+    C: true
   }
 }

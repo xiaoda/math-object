@@ -1,3 +1,3 @@
 import mo from '../src'
 
-mo('-1')
+C(mo(0.25))

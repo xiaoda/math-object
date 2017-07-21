@@ -4,7 +4,7 @@
 
 import xd from 'xdhelper'
 
-let helper = {
+const helper = {
   ...xd
 }
 

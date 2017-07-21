@@ -2,57 +2,42 @@
  * 数字类
  */
 
-const rules = {
-  zero: /^[+-]?0$/,
-  positive: /^[^-]\+?/,
-  negative: /^-/
-}
+import MoBase from './base'
 
-class MoNumber {
+class MoNumber extends MoBase {
   constructor (inputNum) {
-    let numText = helper.toStr(inputNum)
+    super()
+    let numText = util.parseNumText(inputNum)
+    if (!util.checkNumLegal(numText)) return
 
-    if (!this.checkLegal(numText)) return
-
-    // 默认属性
+    /* 默认属性 */
     this.props = {
-      sign: null,
-      numerator: null,
-      denominator: null
+      sign: null,       // 符号
+      numerator: null,  // 分子
+      denominator: null // 分母
     }
 
-    // 检查正负并去掉符号
-    this.checkSign(numText)
-    numText = this.dropSign(numText)
+    numText = this._handleSign(numText)
+    numText = this._handleFraction(numText)
   }
 
-  // 检查输入合法性
-  checkLegal (numText) {
-    return true
-  }
-
-  // 检查正负
-  checkSign (numText) {
-    let sign
-    if (rules.zero.test(numText)) {
-      sign = 'zero'
-    } else if (rules.positive.test(numText)) {
-      sign = 'positive'
-    } else if (rules.negative.test(numText)) {
-      sign = 'negative'
-    }
+  // 处理正负
+  _handleSign (numText) {
+    let sign = util.getSign(numText)
     this.setProp({sign})
+    return util.dropSign(numText)
   }
 
-  // 去掉符号
-  dropSign (numText) {
-    return numText.replace(/[+-]?/g, '')
-  }
-
-  setProp (props) {
-    helper.forEachObj(props, (value, prop) => {
-      this.props[prop] = value
-    })
+  /* 处理分数 */
+  _handleFraction (numText) {
+    let decimalDigit = util.getDecimalDigit(numText)
+    let numerator = helper.multiply(helper.toNum(numText), 10, decimalDigit)
+    let denominator = helper.multiply(1, 10, decimalDigit)
+    let greatestCommonDivisor = util.getGreatestCommonDivisor(numerator, denominator)
+    numerator /= greatestCommonDivisor
+    denominator /= greatestCommonDivisor
+    this.setProp({numerator, denominator})
+    return numText
   }
 }
 

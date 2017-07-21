@@ -36,7 +36,8 @@ let defaultConf = {
     }),
     provide: new webpack.ProvidePlugin({
       config: 'general/config',
-      helper: 'general/helper'
+      helper: 'general/helper',
+      util: 'general/util'
     })
   }
 }
