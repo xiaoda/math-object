@@ -4,6 +4,10 @@
 
 import MoNumber from './number'
 
+/**
+ * @param ({sign, numerator, denominator}) 或 (numerator, denominator)
+ * @return MoNumber 数字类
+ */
 const moFraction = (...args) => {
   if (helper.isObj(args[0])) {
     let options = args[0]

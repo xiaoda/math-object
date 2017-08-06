@@ -102,7 +102,7 @@ class MoNumber extends MoBase {
     return new MoNumber({numerator, denominator})
   }
 
-  /* 减法 */
+  /* 减法：加法的逆运算 */
   minus (input) {
     let target = input instanceof MoNumber ? input : new MoNumber(input)
     return this.add(target.getOppositeNum())
@@ -117,10 +117,19 @@ class MoNumber extends MoBase {
     return new MoNumber({sign, numerator, denominator})
   }
 
-  /* 除法 */
+  /* 除法：乘法的逆运算 */
   devide (input) {
     let target = input instanceof MoNumber ? input : new MoNumber(input)
     return this.multiply(target.getReciprocal())
+  }
+
+  /* 乘方（幂、指数运算） */
+  power (input) {
+    let exponent = util.parseNum(input)
+    let numerator = Math.pow(this.props.numerator, exponent)
+    let denominator = Math.pow(this.props.denominator, exponent)
+    let sign = util.getNumsSign(new Array(exponent).fill(util.signStrToNum(this.props.sign)))
+    return new MoNumber({sign, numerator, denominator})
   }
 
   /* 获取值 */
