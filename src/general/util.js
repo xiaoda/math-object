@@ -2,13 +2,22 @@
  * 功能方法
  */
 
+/* 正则规则 */
 const rules = {
-  zero: /^[+-]?0$/,       // 零
-  positive: /^\+?[^-]/,   // 正数
-  negative: /^-/,         // 负数
-  sign: /^[+-]?/,         // 符号
-  decimal: /\./,          // 小数
-  decimalDigit: /\.(\d+)/ // 小数位数
+  number: /^[+-]?[\d\s]+\.?[\d\s]*$/, // 数字
+  zero: /^[+-]?0$/,                   // 零
+  positive: /^\+?[^-]/,               // 正数
+  negative: /^-/,                     // 负数
+  sign: /^[+-]?/,                     // 符号
+  decimal: /\./,                      // 小数
+  decimalDigit: /\.(\d+)/             // 小数位数
+}
+
+/* 符号对应关系 */
+const signStrNumMap = {
+  positive: 1,
+  negative: -1,
+  zero: 0
 }
 
 const util = {
@@ -35,7 +44,22 @@ const util = {
   /* 检查数字是否合法 */
   checkNumLegal (inputNum) {
     let numText = this.parseNumText(inputNum)
-    return helper.toBool(numText)
+    return rules.number.test(numText)
+  },
+
+  /* 获取符号对应数字 */
+  signStrToNum (inputStr) {
+    return signStrNumMap[inputStr]
+  },
+
+  /* 获取符号对应字符串 */
+  signNumToStr (inputNum) {
+    let num = this.parseNum(inputNum)
+    let targetStr
+    helper.forEachObj(signStrNumMap, (signNum, signStr) => {
+      if (num === signNum) targetStr = signStr
+    })
+    return targetStr
   },
 
   /* 判断符号：零、正、负 */
@@ -48,6 +72,16 @@ const util = {
     } else if (rules.negative.test(numText)) {
       return 'negative'
     }
+  },
+
+  /* 判断多个数字合并后的符号 */
+  getNumsSign (...inputNums) {
+    if (helper.isArr(inputNums[0])) inputNums = inputNums[0]
+    let sign
+    let signs = inputNums.map((inputNum) => this.getSign(inputNum))
+    if (signs.includes('zero')) sign = 'zero'
+    else sign = this.signNumToStr(helper.multiply(1, -1, helper.countArrItem(signs, 'negative')))
+    return sign
   },
 
   /* 去掉符号 */

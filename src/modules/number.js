@@ -15,49 +15,52 @@ class MoNumber extends MoBase {
       denominator: null // 分母
     }
 
-    if (helper.isObj(input)) {
-      let options = input
-      options.numerator = util.parseNum(options.numerator)
-      options.denominator = util.parseNum(options.denominator)
-      let fraction = this._optimizeFraction(options.numerator, options.denominator)
-      options.numerator = fraction.numerator
-      options.denominator = fraction.denominator
-      this.setProp(options)
-      return
+    switch (helper.getType(input)) {
+      case 'object':
+        let options = input
+        if (!this._checkNumsLegal(options.numerator, options.denominator)) return
+        this._initNum(options.numerator, options.denominator, options.sign)
+        break
+
+      case 'string':
+      case 'number':
+      default:
+        if (!this._checkNumsLegal(input)) return
+        this._initNum(input)
     }
-
-    if (!util.checkNumLegal(input)) return
-    let numText = util.parseNumText(input)
-
-    numText = this._handleSign(numText)
-    numText = this._handleFraction(numText)
   }
 
-  // 处理正负
-  _handleSign (numText) {
-    let sign = util.getSign(numText)
+  /* 检查数字是否合法 */
+  _checkNumsLegal (...nums) {
+    if (helper.isArr(nums[0])) nums = nums[0]
+    return nums.every((num) => util.checkNumLegal(num))
+  }
+
+  /* 初始化数字 */
+  _initNum (numerator, denominator = 1, sign = null) {
+    numerator = util.parseNum(numerator)
+    denominator = util.parseNum(denominator)
+    this._handleSign(numerator, denominator, sign)
+    numerator = util.dropSign(numerator)
+    denominator = util.dropSign(denominator)
+    this._handleFraction(numerator, denominator)
+  }
+
+  /* 处理正负 */
+  _handleSign (numerator, denominator, sign) {
+    sign = util.getNumsSign(numerator, denominator, util.signStrToNum(sign))
     this.setProp({sign})
-    return helper.toStr(util.dropSign(numText))
   }
 
   /* 处理分数 */
-  _handleFraction (numText) {
-    let fraction = this._optimizeFraction(helper.toNum(numText), 1)
-    let numerator = fraction.numerator
-    let denominator = fraction.denominator
-    this.setProp({numerator, denominator})
-    return numText
-  }
-
-  /* 优化分子和分母 */
-  _optimizeFraction (numerator, denominator) {
+  _handleFraction (numerator, denominator) {
     let decimalDigit = Math.max(util.getDecimalDigit(numerator), util.getDecimalDigit(denominator))
     numerator = helper.multiply(numerator, 10, decimalDigit)
     denominator = helper.multiply(denominator, 10, decimalDigit)
     let greatestCommonDivisor = util.getGreatestCommonDivisor(numerator, denominator)
-    numerator /= greatestCommonDivisor
-    denominator /= greatestCommonDivisor
-    return {numerator, denominator}
+    numerator = numerator / greatestCommonDivisor
+    denominator = denominator / greatestCommonDivisor
+    this.setProp({numerator, denominator})
   }
 
   /* 获取绝对值 */
@@ -81,10 +84,49 @@ class MoNumber extends MoBase {
     return new MoNumber(options)
   }
 
+  /* 获取倒数 */
+  getReciprocal () {
+    let options = {...this.props}
+    options.numerator = this.props.denominator
+    options.denominator = this.props.numerator
+    return new MoNumber(options)
+  }
+
+  /* 加法 */
+  add (input) {
+    let target = input instanceof MoNumber ? input : new MoNumber(input)
+    let denominator = util.getLowestCommonMultiple(this.props.denominator, target.props.denominator)
+    let thisNumerator = this.props.numerator * (denominator / this.props.denominator) * util.signStrToNum(this.props.sign)
+    let targetNumerator = target.props.numerator * (denominator / target.props.denominator) * util.signStrToNum(target.props.sign)
+    let numerator = thisNumerator + targetNumerator
+    return new MoNumber({numerator, denominator})
+  }
+
+  /* 减法 */
+  minus (input) {
+    let target = input instanceof MoNumber ? input : new MoNumber(input)
+    return this.add(target.getOppositeNum())
+  }
+
+  /* 乘法 */
+  multiply (input) {
+    let target = input instanceof MoNumber ? input : new MoNumber(input)
+    let numerator = this.props.numerator * target.props.numerator
+    let denominator = this.props.denominator * target.props.denominator
+    let sign = util.getNumsSign(util.signStrToNum(this.props.sign), util.signStrToNum(target.props.sign))
+    return new MoNumber({sign, numerator, denominator})
+  }
+
+  /* 除法 */
+  devide (input) {
+    let target = input instanceof MoNumber ? input : new MoNumber(input)
+    return this.multiply(target.getReciprocal())
+  }
+
   /* 获取值 */
   getVal () {
     let {sign, numerator, denominator} = this.props
-    return numerator / denominator * (['positive', 'zero'].includes(sign) ? 1 : -1)
+    return numerator / denominator * util.signStrToNum(sign)
   }
 }
 
