@@ -63,6 +63,31 @@ class MoNumber extends MoBase {
     this.setProp({numerator, denominator})
   }
 
+  /* 判断是否为正 */
+  isPositive () {
+    return this.props.sign === 'positive'
+  }
+
+  /* 判断是否为负 */
+  isNegative () {
+    return this.props.sign === 'negative'
+  }
+
+  /* 判断是否为零 */
+  isZero () {
+    return this.props.sign === 'zero'
+  }
+
+  /* 判断是否整数 */
+  isInteger () {
+    return this.props.denominator === 1
+  }
+
+  /* 判断是否分数 */
+  isDecimal () {
+    return this.props.denominator !== 1
+  }
+
   /* 获取绝对值 */
   getAbsoluteVal () {
     let options = {...this.props}

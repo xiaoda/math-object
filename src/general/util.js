@@ -4,13 +4,14 @@
 
 /* 正则规则 */
 const rules = {
-  number: /^[+-]?[\d\s]+\.?[\d\s]*$/, // 数字
-  zero: /^[+-]?0$/,                   // 零
-  positive: /^\+?[^-]/,               // 正数
-  negative: /^-/,                     // 负数
-  sign: /^[+-]?/,                     // 符号
-  decimal: /\./,                      // 小数
-  decimalDigit: /\.(\d+)/             // 小数位数
+  number: /^[+-]?[\d\s]+\.?[\d\s]*$/, // 数字 或 字符串型数字
+  zero: /^[+-]?0$/,        // 零
+  positive: /^\+?[^-]/,    // 正数
+  negative: /^-/,          // 负数
+  sign: /^[+-]?/,          // 符号
+  integer: /^[^.]+$/,     // 整数
+  decimal: /\./,           // 小数
+  decimalDigit: /\.(\d+)/  // 小数位数
 }
 
 /* 符号对应关系 */
@@ -37,14 +38,14 @@ const util = {
   },
 
   /* 将输入数字转化为字符串类型 */
-  parseNumText (inputNum) {
+  parseNumStr (inputNum) {
     return helper.toStr(this.parseNum(inputNum))
   },
 
   /* 检查数字是否合法 */
   checkNumLegal (inputNum) {
-    let numText = this.parseNumText(inputNum)
-    return rules.number.test(numText)
+    let numStr = this.parseNumStr(inputNum)
+    return rules.number.test(numStr)
   },
 
   /* 获取符号对应数字 */
@@ -64,12 +65,12 @@ const util = {
 
   /* 判断符号：零、正、负 */
   getSign (inputNum) {
-    let numText = this.parseNumText(inputNum)
-    if (rules.zero.test(numText)) {
+    let numStr = this.parseNumStr(inputNum)
+    if (rules.zero.test(numStr)) {
       return 'zero'
-    } else if (rules.positive.test(numText)) {
+    } else if (rules.positive.test(numStr)) {
       return 'positive'
-    } else if (rules.negative.test(numText)) {
+    } else if (rules.negative.test(numStr)) {
       return 'negative'
     }
   },
@@ -86,38 +87,44 @@ const util = {
 
   /* 去掉符号 */
   dropSign (inputNum) {
-    let numText = this.parseNumText(inputNum)
-    return helper.toNum(numText.replace(rules.sign, ''))
+    let numStr = this.parseNumStr(inputNum)
+    return helper.toNum(numStr.replace(rules.sign, ''))
   },
 
   /* 判断是否为零 */
   isZero (inputNum) {
-    let numText = this.parseNumText(inputNum)
-    return this.getNumSign(numText) === 'zero'
+    let numStr = this.parseNumStr(inputNum)
+    return this.getSign(numStr) === 'zero'
   },
 
   /* 判断是否为正 */
   isPositive (inputNum) {
-    let numText = this.parseNumText(inputNum)
-    return this.getNumSign(numText) === 'positive'
+    let numStr = this.parseNumStr(inputNum)
+    return this.getSign(numStr) === 'positive'
   },
 
   /* 判断是否为负 */
   isNegative (inputNum) {
-    let numText = this.parseNumText(inputNum)
-    return this.getNumSign(numText) === 'negative'
+    let numStr = this.parseNumStr(inputNum)
+    return this.getSign(numStr) === 'negative'
+  },
+
+  /* 判断是否整数 */
+  isInteger (inputNum) {
+    let numStr = this.parseNumStr(inputNum)
+    return rules.integer.test(numStr)
   },
 
   /* 判断是否为小数 */
   isDecimal (inputNum) {
-    let numText = this.parseNumText(inputNum)
-    return rules.decimal.test(numText)
+    let numStr = this.parseNumStr(inputNum)
+    return rules.decimal.test(numStr)
   },
 
   /* 获取小数位数 */
   getDecimalDigit (inputNum) {
-    let numText = this.parseNumText(inputNum)
-    let match = numText.match(rules.decimalDigit)
+    let numStr = this.parseNumStr(inputNum)
+    let match = numStr.match(rules.decimalDigit)
     return helper.toBool(match) ? match[1].length : 0
   },
 

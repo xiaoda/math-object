@@ -7,7 +7,8 @@
     "start": "NODE_ENV='dev' webpack-dev-server --config build/webpack.dev.config.js",
     "build": "NODE_ENV='prod' webpack --config build/webpack.prod.config.js",
     "prebuild": "npm run clear",
-    "clear": "rm -rf dist"
+    "clear": "rm -rf dist",
+    "test": "node_modules/mocha/bin/mocha"
   },
   "repository": {
     "type": "git",
@@ -40,6 +41,7 @@
     "eslint-plugin-node": "^5.1.1",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
+    "mocha": "^3.5.0",
     "webpack": "^3.3.0",
     "webpack-dev-server": "^2.5.1"
   }
