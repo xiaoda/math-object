@@ -1,24 +1,24 @@
-let assert = require('assert')
-let mo = require('../../dist')
+const assert = require('assert')
+const mo = require('../../../dist')
 
-describe('util', function () {
+describe('util', () => {
 
-  describe('#parseNum()', function () {
-    it('number to number', function () {
+  describe('#parseNum()', () => {
+    it('number to number', () => {
       assert.equal(
         mo.parseNum(1.23),
         1.23
       )
     })
 
-    it('string to number', function () {
+    it('string to number', () => {
       assert.equal(
         mo.parseNum('1.23'),
         1.23
       )
     })
 
-    it('string with space to number', function () {
+    it('string with space to number', () => {
       assert.equal(
         mo.parseNum('  1  .  2  3  '),
         1.23
@@ -26,22 +26,22 @@ describe('util', function () {
     })
   })
 
-  describe('#parseNumStr()', function () {
-    it('number to string', function () {
+  describe('#parseNumStr()', () => {
+    it('number to string', () => {
       assert.equal(
         mo.parseNumStr(1.23),
         '1.23'
       )
     })
 
-    it('string to string', function () {
+    it('string to string', () => {
       assert.equal(
         mo.parseNumStr('1.23'),
         '1.23'
       )
     })
 
-    it('string with space to string', function () {
+    it('string with space to string', () => {
       assert.equal(
         mo.parseNumStr('  1  .  2  3  '),
         '1.23'
@@ -49,29 +49,29 @@ describe('util', function () {
     })
   })
 
-  describe('#checkNumLegal()', function () {
-    it('legal negative number', function () {
+  describe('#checkNumLegal()', () => {
+    it('legal negative number', () => {
       assert.equal(
         mo.checkNumLegal(-1.23),
         true
       )
     })
 
-    it('legal positive string with sign', function () {
+    it('legal positive string with sign', () => {
       assert.equal(
         mo.checkNumLegal('+1.23'),
         true
       )
     })
 
-    it('legal string with space', function () {
+    it('legal string with space', () => {
       assert.equal(
         mo.checkNumLegal('  1  .  2  3  '),
         true
       )
     })
 
-    it('illegal string with charactor', function () {
+    it('illegal string with charactor', () => {
       assert.equal(
         mo.checkNumLegal('1A23'),
         false
@@ -79,22 +79,22 @@ describe('util', function () {
     })
   })
 
-  describe('#signStrToNum()', function () {
-    it('positive', function () {
+  describe('#signStrToNum()', () => {
+    it('positive', () => {
       assert.equal(
         mo.signStrToNum('positive'),
         1
       )
     })
 
-    it('negative', function () {
+    it('negative', () => {
       assert.equal(
         mo.signStrToNum('negative'),
         -1
       )
     })
 
-    it('zero', function () {
+    it('zero', () => {
       assert.equal(
         mo.signStrToNum('zero'),
         0
@@ -102,22 +102,22 @@ describe('util', function () {
     })
   })
 
-  describe('#signNumToStr()', function () {
-    it('1', function () {
+  describe('#signNumToStr()', () => {
+    it('1', () => {
       assert.equal(
         mo.signNumToStr(1),
         'positive'
       )
     })
 
-    it('-1', function () {
+    it('-1', () => {
       assert.equal(
         mo.signNumToStr(-1),
         'negative'
       )
     })
 
-    it('0', function () {
+    it('0', () => {
       assert.equal(
         mo.signNumToStr(0),
         'zero'
@@ -125,22 +125,22 @@ describe('util', function () {
     })
   })
 
-  describe('#getSign()', function () {
-    it('positive', function () {
+  describe('#getSign()', () => {
+    it('positive', () => {
       assert.equal(
         mo.getSign(1.23),
         'positive'
       )
     })
 
-    it('negative', function () {
+    it('negative', () => {
       assert.equal(
         mo.getSign(-1.23),
         'negative'
       )
     })
 
-    it('zero', function () {
+    it('zero', () => {
       assert.equal(
         mo.getSign(0),
         'zero'
@@ -148,22 +148,22 @@ describe('util', function () {
     })
   })
 
-  describe('#getNumsSign()', function () {
-    it('1 positive, 1 negative', function () {
+  describe('#getNumsSign()', () => {
+    it('1 positive, 1 negative', () => {
       assert.equal(
         mo.getNumsSign(1.23, -1.23),
         'negative'
       )
     })
 
-    it('2 negative', function () {
+    it('2 negative', () => {
       assert.equal(
         mo.getNumsSign(-1.23, -2.34),
         'positive'
       )
     })
 
-    it('3 negative', function () {
+    it('3 negative', () => {
       assert.equal(
         mo.getNumsSign(-1.23, -2.34, -3.45),
         'negative'
@@ -171,8 +171,8 @@ describe('util', function () {
     })
   })
 
-  describe('#dropSign()', function () {
-    it('negative number', function () {
+  describe('#dropSign()', () => {
+    it('negative number', () => {
       assert.equal(
         mo.dropSign(-1.23),
         1.23
@@ -180,22 +180,22 @@ describe('util', function () {
     })
   })
 
-  describe('#isZero()', function () {
-    it('zero', function () {
+  describe('#isZero()', () => {
+    it('zero', () => {
       assert.equal(
         mo.isZero(0),
         true
       )
     })
 
-    it('positive number', function () {
+    it('positive number', () => {
       assert.equal(
         mo.isZero(1.23),
         false
       )
     })
 
-    it('negative number', function () {
+    it('negative number', () => {
       assert.equal(
         mo.isZero(-1.23),
         false
@@ -203,22 +203,22 @@ describe('util', function () {
     })
   })
 
-  describe('#isPositive()', function () {
-    it('zero', function () {
+  describe('#isPositive()', () => {
+    it('zero', () => {
       assert.equal(
         mo.isPositive(0),
         false
       )
     })
 
-    it('positive number', function () {
+    it('positive number', () => {
       assert.equal(
         mo.isPositive(1.23),
         true
       )
     })
 
-    it('negative number', function () {
+    it('negative number', () => {
       assert.equal(
         mo.isPositive(-1.23),
         false
@@ -226,22 +226,22 @@ describe('util', function () {
     })
   })
 
-  describe('#isNegative()', function () {
-    it('zero', function () {
+  describe('#isNegative()', () => {
+    it('zero', () => {
       assert.equal(
         mo.isNegative(0),
         false
       )
     })
 
-    it('positive number', function () {
+    it('positive number', () => {
       assert.equal(
         mo.isNegative(1.23),
         false
       )
     })
 
-    it('negative number', function () {
+    it('negative number', () => {
       assert.equal(
         mo.isNegative(-1.23),
         true
@@ -249,15 +249,15 @@ describe('util', function () {
     })
   })
 
-  describe('#isInteger()', function () {
-    it('integer', function () {
+  describe('#isInteger()', () => {
+    it('integer', () => {
       assert.equal(
         mo.isInteger(123),
         true
       )
     })
 
-    it('decimal', function () {
+    it('decimal', () => {
       assert.equal(
         mo.isInteger(1.23),
         false
@@ -265,15 +265,15 @@ describe('util', function () {
     })
   })
 
-  describe('#isDecimal()', function () {
-    it('integer', function () {
+  describe('#isDecimal()', () => {
+    it('integer', () => {
       assert.equal(
         mo.isDecimal(123),
         false
       )
     })
 
-    it('decimal', function () {
+    it('decimal', () => {
       assert.equal(
         mo.isDecimal(1.23),
         true
@@ -281,15 +281,15 @@ describe('util', function () {
     })
   })
 
-  describe('#getDecimalDigit()', function () {
-    it('integer', function () {
+  describe('#getDecimalDigit()', () => {
+    it('integer', () => {
       assert.equal(
         mo.getDecimalDigit(123),
         0
       )
     })
 
-    it('decimal', function () {
+    it('decimal', () => {
       assert.equal(
         mo.getDecimalDigit(1.23),
         2
@@ -297,8 +297,8 @@ describe('util', function () {
     })
   })
 
-  describe('#getDivisor()', function () {
-    it('60', function () {
+  describe('#getDivisor()', () => {
+    it('60', () => {
       assert.equal(
         JSON.stringify(mo.getDivisor(60)),
         JSON.stringify([2, 2, 3, 5])
@@ -306,20 +306,34 @@ describe('util', function () {
     })
   })
 
-  describe('#getGreatestCommonDivisor()', function () {
-    it('30, 45, 75', function () {
+  describe('#getGreatestCommonDivisor()', () => {
+    it('30, 45, 75', () => {
       assert.equal(
-        JSON.stringify(mo.getGreatestCommonDivisor([30, 45, 75])),
+        mo.getGreatestCommonDivisor([30, 45, 75]),
         15
+      )
+    })
+
+    it('1, 2, 3', () => {
+      assert.equal(
+        mo.getGreatestCommonDivisor([1, 2, 3]),
+        1
       )
     })
   })
 
-  describe('#getLowestCommonMultiple()', function () {
-    it('6, 8, 10', function () {
+  describe('#getLowestCommonMultiple()', () => {
+    it('6, 8, 10', () => {
       assert.equal(
-        JSON.stringify(mo.getLowestCommonMultiple([6, 8, 10])),
+        mo.getLowestCommonMultiple([6, 8, 10]),
         120
+      )
+    })
+
+    it('1, 2, 3', () => {
+      assert.equal(
+        mo.getLowestCommonMultiple([1, 2, 3]),
+        6
       )
     })
   })

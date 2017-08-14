@@ -63,6 +63,12 @@ class MoNumber extends MoBase {
     this.setProp({numerator, denominator})
   }
 
+  /* 获取值 */
+  getVal () {
+    let {sign, numerator, denominator} = this.props
+    return numerator / denominator * util.signStrToNum(sign)
+  }
+
   /* 判断是否为正 */
   isPositive () {
     return this.props.sign === 'positive'
@@ -112,8 +118,13 @@ class MoNumber extends MoBase {
   /* 获取倒数 */
   getReciprocal () {
     let options = {...this.props}
-    options.numerator = this.props.denominator
-    options.denominator = this.props.numerator
+    if (this.props.numerator === 0) {
+      options.numerator = 0
+      options.denominator = 1
+    } else {
+      options.numerator = this.props.denominator
+      options.denominator = this.props.numerator
+    }
     return new MoNumber(options)
   }
 
@@ -155,12 +166,6 @@ class MoNumber extends MoBase {
     let denominator = Math.pow(this.props.denominator, exponent)
     let sign = util.getNumsSign(new Array(exponent).fill(util.signStrToNum(this.props.sign)))
     return new MoNumber({sign, numerator, denominator})
-  }
-
-  /* 获取值 */
-  getVal () {
-    let {sign, numerator, denominator} = this.props
-    return numerator / denominator * util.signStrToNum(sign)
   }
 }
 

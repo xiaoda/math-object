@@ -434,6 +434,19 @@ var MoNumber = function (_MoBase) {
       this.setProp({ numerator: numerator, denominator: denominator });
     }
 
+    /* 获取值 */
+
+  }, {
+    key: 'getVal',
+    value: function getVal() {
+      var _props = this.props,
+          sign = _props.sign,
+          numerator = _props.numerator,
+          denominator = _props.denominator;
+
+      return numerator / denominator * util.signStrToNum(sign);
+    }
+
     /* 判断是否为正 */
 
   }, {
@@ -507,8 +520,13 @@ var MoNumber = function (_MoBase) {
     key: 'getReciprocal',
     value: function getReciprocal() {
       var options = _extends({}, this.props);
-      options.numerator = this.props.denominator;
-      options.denominator = this.props.numerator;
+      if (this.props.numerator === 0) {
+        options.numerator = 0;
+        options.denominator = 1;
+      } else {
+        options.numerator = this.props.denominator;
+        options.denominator = this.props.numerator;
+      }
       return new MoNumber(options);
     }
 
@@ -565,19 +583,6 @@ var MoNumber = function (_MoBase) {
       var denominator = Math.pow(this.props.denominator, exponent);
       var sign = util.getNumsSign(new Array(exponent).fill(util.signStrToNum(this.props.sign)));
       return new MoNumber({ sign: sign, numerator: numerator, denominator: denominator });
-    }
-
-    /* 获取值 */
-
-  }, {
-    key: 'getVal',
-    value: function getVal() {
-      var _props = this.props,
-          sign = _props.sign,
-          numerator = _props.numerator,
-          denominator = _props.denominator;
-
-      return numerator / denominator * util.signStrToNum(sign);
     }
   }]);
 
