@@ -9,7 +9,7 @@ const rules = {
   positive: /^\+?[^-]/,    // 正数
   negative: /^-/,          // 负数
   sign: /^[+-]?/,          // 符号
-  integer: /^[^.]+$/,     // 整数
+  integer: /^[^.]+$/,      // 整数
   decimal: /\./,           // 小数
   decimalDigit: /\.(\d+)/  // 小数位数
 }
