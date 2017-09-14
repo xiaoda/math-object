@@ -1,7 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 
-let defaultConf = {
+let baseConf = {
   module: {
     rules: {
       eslint: {
@@ -42,4 +42,4 @@ let defaultConf = {
   }
 }
 
-module.exports = defaultConf
+module.exports = baseConf
