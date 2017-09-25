@@ -23,7 +23,7 @@
   "author": "xiaoda",
   "license": "MIT",
   "dependencies": {
-    "xdhelper": "^0.2.5"
+    "xdhelper": "^1.1.0"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
