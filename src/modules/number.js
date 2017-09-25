@@ -94,6 +94,16 @@ class MoNumber extends MoBase {
     return this.props.denominator !== 1
   }
 
+  /* 判断是否相等 */
+  isEqual (input) {
+    let target = input instanceof MoNumber ? input : new MoNumber(input)
+    return (
+      this.props.sign === target.props.sign &&
+      this.props.numerator === target.props.numerator &&
+      this.props.denominator === target.props.denominator
+    )
+  }
+
   /* 获取绝对值 */
   getAbsoluteVal () {
     let options = {...this.props}

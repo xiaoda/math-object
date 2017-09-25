@@ -1,3 +1,3 @@
 import mo from '../src'
 
-C(mo(-2).power(2).getVal())
+C(mo(-0.5).isEqual(mo.fraction(1, -2)))

@@ -38,6 +38,18 @@ describe('mo.Number', () => {
     })
   })
 
+  describe(`#isEqual()`, () => {
+    data.list.forEach((item) => {
+      it(item.type, () => {
+        let num = new mo.Number(item.input)
+        assert.equal(
+          num.isEqual(0.1),
+          item.expect['isEqualTo0.1']
+        )
+      })
+    })
+  })
+
   data.funcs.instanceReturn.forEach((func) => {
     describe(`#${func}()`, () => {
       data.list.forEach((item) => {

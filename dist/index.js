@@ -1,4 +1,14 @@
-(function(e, a) { for(var i in a) e[i] = a[i]; }(exports, /******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["mo"] = factory();
+	else
+		root["mo"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -485,6 +495,15 @@ var MoNumber = function (_MoBase) {
     key: 'isDecimal',
     value: function isDecimal() {
       return this.props.denominator !== 1;
+    }
+
+    /* 判断是否相等 */
+
+  }, {
+    key: 'isEqual',
+    value: function isEqual(input) {
+      var target = input instanceof MoNumber ? input : new MoNumber(input);
+      return this.props.sign === target.props.sign && this.props.numerator === target.props.numerator && this.props.denominator === target.props.denominator;
     }
 
     /* 获取绝对值 */
@@ -1705,5 +1724,6 @@ module.exports = moFraction;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ })
-/******/ ])));
+/******/ ]);
+});
 //# sourceMappingURL=index.js.map
