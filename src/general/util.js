@@ -26,14 +26,17 @@ const util = {
   /* 将输入数字转化为数字类型 */
   parseNum (inputNum) {
     let num
+
     switch (helper.getType(inputNum)) {
       case 'number':
         num = inputNum
         break
+
       case 'string':
         num = helper.toNum(inputNum.replace(/\s/g, ''))
         break
     }
+
     return num
   },
 
@@ -45,6 +48,7 @@ const util = {
   /* 检查数字是否合法 */
   checkNumLegal (inputNum) {
     let numStr = this.parseNumStr(inputNum)
+
     return rules.number.test(numStr)
   },
 
@@ -57,15 +61,18 @@ const util = {
   signNumToStr (inputNum) {
     let num = this.parseNum(inputNum)
     let targetStr
+
     helper.forEachObj(signStrNumMap, (signNum, signStr) => {
       if (num === signNum) targetStr = signStr
     })
+
     return targetStr
   },
 
   /* 判断符号：零、正、负 */
   getSign (inputNum) {
     let numStr = this.parseNumStr(inputNum)
+
     if (rules.zero.test(numStr)) {
       return 'zero'
     } else if (rules.positive.test(numStr)) {
@@ -78,46 +85,55 @@ const util = {
   /* 判断多个数字合并后的符号 */
   getNumsSign (...inputNums) {
     if (helper.isArr(inputNums[0])) inputNums = inputNums[0]
+
     let sign
     let signs = inputNums.map((inputNum) => this.getSign(inputNum))
+
     if (signs.includes('zero')) sign = 'zero'
     else sign = this.signNumToStr(helper.multiply(1, -1, helper.countArrItem(signs, 'negative')))
+
     return sign
   },
 
   /* 去掉符号 */
   dropSign (inputNum) {
     let numStr = this.parseNumStr(inputNum)
+
     return helper.toNum(numStr.replace(rules.sign, ''))
   },
 
   /* 判断是否为零 */
   isZero (inputNum) {
     let numStr = this.parseNumStr(inputNum)
+
     return this.getSign(numStr) === 'zero'
   },
 
   /* 判断是否为正 */
   isPositive (inputNum) {
     let numStr = this.parseNumStr(inputNum)
+
     return this.getSign(numStr) === 'positive'
   },
 
   /* 判断是否为负 */
   isNegative (inputNum) {
     let numStr = this.parseNumStr(inputNum)
+
     return this.getSign(numStr) === 'negative'
   },
 
   /* 判断是否整数 */
   isInteger (inputNum) {
     let numStr = this.parseNumStr(inputNum)
+
     return rules.integer.test(numStr)
   },
 
   /* 判断是否为小数 */
   isDecimal (inputNum) {
     let numStr = this.parseNumStr(inputNum)
+
     return rules.decimal.test(numStr)
   },
 
@@ -125,6 +141,7 @@ const util = {
   getDecimalDigit (inputNum) {
     let numStr = this.parseNumStr(inputNum)
     let match = numStr.match(rules.decimalDigit)
+
     return helper.toBool(match) ? match[1].length : 0
   },
 
@@ -133,6 +150,7 @@ const util = {
     let num = this.parseNum(inputNum)
     let divisor = []
     let i = 2
+
     while (i <= num) {
       if (i === num) {
         divisor.push(i)
@@ -144,38 +162,45 @@ const util = {
         i++
       }
     }
+
     return divisor
   },
 
   /* 获取最大公因数（公约数） */
   getGreatestCommonDivisor (...inputNums) {
     if (helper.isArr(inputNums[0])) inputNums = inputNums[0]
+
     let divisors = inputNums.map((inputNum) => {
       return this.parseNum(inputNum)
     }).map((num) => {
       return this.getDivisor(num)
     })
     let commonDivisors = []
+
     helper.intersectArr(...divisors).forEach((num) => {
       let counts = divisors.map((arr) => helper.countArrItem(arr, num))
       commonDivisors.push(...new Array(Math.min(...counts)).fill(num))
     })
+
     return commonDivisors.length ? commonDivisors.reduce((sum, val) => sum * val) : 1
   },
 
   /* 获取最小公倍数 */
   getLowestCommonMultiple (...inputNums) {
     if (helper.isArr(inputNums[0])) inputNums = inputNums[0]
+
     let divisors = inputNums.map((inputNum) => {
       return this.parseNum(inputNum)
     }).map((num) => {
       return this.getDivisor(num)
     })
     let allDivisors = []
+
     helper.unionArr(...divisors).forEach((num) => {
       let counts = divisors.map((arr) => helper.countArrItem(arr, num))
       allDivisors.push(...new Array(Math.max(...counts)).fill(num))
     })
+
     return allDivisors.length ? allDivisors.reduce((sum, val) => sum * val) : 1
   }
 }
