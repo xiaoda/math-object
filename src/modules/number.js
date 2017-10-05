@@ -15,18 +15,26 @@ class MoNumber extends MoBase {
       denominator: null // 分母
     }
 
-    switch (helper.getType(input)) {
-      case 'object':
-        let options = input
-        if (!this._checkNumsLegal(options.numerator, options.denominator)) return
-        this._initNum(options.numerator, options.denominator, options.sign)
-        break
+    if (input instanceof MoNumber) {
+      this.setProp({
+        sign: input.props.sign,
+        numerator: input.props.numerator,
+        denominator: input.props.denominator
+      })
+    } else {
+      switch (helper.getType(input)) {
+        case 'object':
+          let options = input
+          if (!this._checkNumsLegal(options.numerator, options.denominator)) return
+          this._initNum(options.numerator, options.denominator, options.sign)
+          break
 
-      case 'string':
-      case 'number':
-      default:
-        if (!this._checkNumsLegal(input)) return
-        this._initNum(input)
+        case 'number':
+        case 'string':
+        default:
+          if (!this._checkNumsLegal(input)) return
+          this._initNum(input)
+      }
     }
   }
 
@@ -106,7 +114,7 @@ class MoNumber extends MoBase {
 
   /* 判断是否相等 */
   isEqual (input) {
-    let target = input instanceof MoNumber ? input : new MoNumber(input)
+    let target = new MoNumber(input)
 
     return (
       this.props.sign === target.props.sign &&
@@ -157,7 +165,7 @@ class MoNumber extends MoBase {
 
   /* 加法 */
   add (input) {
-    let target = input instanceof MoNumber ? input : new MoNumber(input)
+    let target = new MoNumber(input)
     let denominator = util.getLowestCommonMultiple(this.props.denominator, target.props.denominator)
     let thisNumerator = this.props.numerator * (denominator / this.props.denominator) * util.signStrToNum(this.props.sign)
     let targetNumerator = target.props.numerator * (denominator / target.props.denominator) * util.signStrToNum(target.props.sign)
@@ -168,14 +176,14 @@ class MoNumber extends MoBase {
 
   /* 减法：加法的逆运算 */
   minus (input) {
-    let target = input instanceof MoNumber ? input : new MoNumber(input)
+    let target = new MoNumber(input)
 
     return this.add(target.getOppositeNum())
   }
 
   /* 乘法 */
   multiply (input) {
-    let target = input instanceof MoNumber ? input : new MoNumber(input)
+    let target = new MoNumber(input)
     let numerator = this.props.numerator * target.props.numerator
     let denominator = this.props.denominator * target.props.denominator
     let sign = util.getNumsSign(util.signStrToNum(this.props.sign), util.signStrToNum(target.props.sign))
@@ -185,7 +193,7 @@ class MoNumber extends MoBase {
 
   /* 除法：乘法的逆运算 */
   devide (input) {
-    let target = input instanceof MoNumber ? input : new MoNumber(input)
+    let target = new MoNumber(input)
 
     return this.multiply(target.getReciprocal())
   }

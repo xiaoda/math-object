@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -84,7 +84,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
                                                                                                                                                                                                                                                                    * 帮助方法
                                                                                                                                                                                                                                                                    */
 
-var _xdhelper = __webpack_require__(5);
+var _xdhelper = __webpack_require__(7);
 
 var _xdhelper2 = _interopRequireDefault(_xdhelper);
 
@@ -99,252 +99,13 @@ module.exports = helper;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(helper) {
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-/**
- * 功能方法
- */
-
-/* 正则规则 */
-var rules = {
-  number: /^[+-]?[\d\s]+\.?[\d\s]*$/, // 数字 或 字符串型数字
-  zero: /^[+-]?0$/, // 零
-  positive: /^\+?[^-]/, // 正数
-  negative: /^-/, // 负数
-  sign: /^[+-]?/, // 符号
-  integer: /^[^.]+$/, // 整数
-  decimal: /\./, // 小数
-  decimalDigit: /\.(\d+)/ // 小数位数
-
-
-  /* 符号对应关系 */
-};var signStrNumMap = {
-  positive: 1,
-  negative: -1,
-  zero: 0
-};
-
-var util = {
-
-  /* 将输入数字转化为数字类型 */
-  parseNum: function parseNum(inputNum) {
-    var num = void 0;
-    switch (helper.getType(inputNum)) {
-      case 'number':
-        num = inputNum;
-        break;
-      case 'string':
-        num = helper.toNum(inputNum.replace(/\s/g, ''));
-        break;
-    }
-    return num;
-  },
-
-
-  /* 将输入数字转化为字符串类型 */
-  parseNumStr: function parseNumStr(inputNum) {
-    return helper.toStr(this.parseNum(inputNum));
-  },
-
-
-  /* 检查数字是否合法 */
-  checkNumLegal: function checkNumLegal(inputNum) {
-    var numStr = this.parseNumStr(inputNum);
-    return rules.number.test(numStr);
-  },
-
-
-  /* 获取符号对应数字 */
-  signStrToNum: function signStrToNum(inputStr) {
-    return signStrNumMap[inputStr];
-  },
-
-
-  /* 获取符号对应字符串 */
-  signNumToStr: function signNumToStr(inputNum) {
-    var num = this.parseNum(inputNum);
-    var targetStr = void 0;
-    helper.forEachObj(signStrNumMap, function (signNum, signStr) {
-      if (num === signNum) targetStr = signStr;
-    });
-    return targetStr;
-  },
-
-
-  /* 判断符号：零、正、负 */
-  getSign: function getSign(inputNum) {
-    var numStr = this.parseNumStr(inputNum);
-    if (rules.zero.test(numStr)) {
-      return 'zero';
-    } else if (rules.positive.test(numStr)) {
-      return 'positive';
-    } else if (rules.negative.test(numStr)) {
-      return 'negative';
-    }
-  },
-
-
-  /* 判断多个数字合并后的符号 */
-  getNumsSign: function getNumsSign() {
-    var _this = this;
-
-    for (var _len = arguments.length, inputNums = Array(_len), _key = 0; _key < _len; _key++) {
-      inputNums[_key] = arguments[_key];
-    }
-
-    if (helper.isArr(inputNums[0])) inputNums = inputNums[0];
-    var sign = void 0;
-    var signs = inputNums.map(function (inputNum) {
-      return _this.getSign(inputNum);
-    });
-    if (signs.includes('zero')) sign = 'zero';else sign = this.signNumToStr(helper.multiply(1, -1, helper.countArrItem(signs, 'negative')));
-    return sign;
-  },
-
-
-  /* 去掉符号 */
-  dropSign: function dropSign(inputNum) {
-    var numStr = this.parseNumStr(inputNum);
-    return helper.toNum(numStr.replace(rules.sign, ''));
-  },
-
-
-  /* 判断是否为零 */
-  isZero: function isZero(inputNum) {
-    var numStr = this.parseNumStr(inputNum);
-    return this.getSign(numStr) === 'zero';
-  },
-
-
-  /* 判断是否为正 */
-  isPositive: function isPositive(inputNum) {
-    var numStr = this.parseNumStr(inputNum);
-    return this.getSign(numStr) === 'positive';
-  },
-
-
-  /* 判断是否为负 */
-  isNegative: function isNegative(inputNum) {
-    var numStr = this.parseNumStr(inputNum);
-    return this.getSign(numStr) === 'negative';
-  },
-
-
-  /* 判断是否整数 */
-  isInteger: function isInteger(inputNum) {
-    var numStr = this.parseNumStr(inputNum);
-    return rules.integer.test(numStr);
-  },
-
-
-  /* 判断是否为小数 */
-  isDecimal: function isDecimal(inputNum) {
-    var numStr = this.parseNumStr(inputNum);
-    return rules.decimal.test(numStr);
-  },
-
-
-  /* 获取小数位数 */
-  getDecimalDigit: function getDecimalDigit(inputNum) {
-    var numStr = this.parseNumStr(inputNum);
-    var match = numStr.match(rules.decimalDigit);
-    return helper.toBool(match) ? match[1].length : 0;
-  },
-
-
-  /* 获取因数 */
-  getDivisor: function getDivisor(inputNum) {
-    var num = this.parseNum(inputNum);
-    var divisor = [];
-    var i = 2;
-    while (i <= num) {
-      if (i === num) {
-        divisor.push(i);
-        i++;
-      } else if (num % i === 0) {
-        divisor.push(i);
-        num /= i;
-      } else {
-        i++;
-      }
-    }
-    return divisor;
-  },
-
-
-  /* 获取最大公因数（公约数） */
-  getGreatestCommonDivisor: function getGreatestCommonDivisor() {
-    var _this2 = this,
-        _helper;
-
-    for (var _len2 = arguments.length, inputNums = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-      inputNums[_key2] = arguments[_key2];
-    }
-
-    if (helper.isArr(inputNums[0])) inputNums = inputNums[0];
-    var divisors = inputNums.map(function (inputNum) {
-      return _this2.parseNum(inputNum);
-    }).map(function (num) {
-      return _this2.getDivisor(num);
-    });
-    var commonDivisors = [];
-    (_helper = helper).intersectArr.apply(_helper, _toConsumableArray(divisors)).forEach(function (num) {
-      var counts = divisors.map(function (arr) {
-        return helper.countArrItem(arr, num);
-      });
-      commonDivisors.push.apply(commonDivisors, _toConsumableArray(new Array(Math.min.apply(Math, _toConsumableArray(counts))).fill(num)));
-    });
-    return commonDivisors.length ? commonDivisors.reduce(function (sum, val) {
-      return sum * val;
-    }) : 1;
-  },
-
-
-  /* 获取最小公倍数 */
-  getLowestCommonMultiple: function getLowestCommonMultiple() {
-    var _this3 = this,
-        _helper2;
-
-    for (var _len3 = arguments.length, inputNums = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-      inputNums[_key3] = arguments[_key3];
-    }
-
-    if (helper.isArr(inputNums[0])) inputNums = inputNums[0];
-    var divisors = inputNums.map(function (inputNum) {
-      return _this3.parseNum(inputNum);
-    }).map(function (num) {
-      return _this3.getDivisor(num);
-    });
-    var allDivisors = [];
-    (_helper2 = helper).unionArr.apply(_helper2, _toConsumableArray(divisors)).forEach(function (num) {
-      var counts = divisors.map(function (arr) {
-        return helper.countArrItem(arr, num);
-      });
-      allDivisors.push.apply(allDivisors, _toConsumableArray(new Array(Math.max.apply(Math, _toConsumableArray(counts))).fill(num)));
-    });
-    return allDivisors.length ? allDivisors.reduce(function (sum, val) {
-      return sum * val;
-    }) : 1;
-  }
-};
-
-module.exports = util;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
 /* WEBPACK VAR INJECTION */(function(helper, util) {
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _base = __webpack_require__(6);
+var _base = __webpack_require__(2);
 
 var _base2 = _interopRequireDefault(_base);
 
@@ -373,18 +134,26 @@ var MoNumber = function (_MoBase) {
       denominator: null // 分母
     };
 
-    switch (helper.getType(input)) {
-      case 'object':
-        var options = input;
-        if (!_this._checkNumsLegal(options.numerator, options.denominator)) return _possibleConstructorReturn(_this);
-        _this._initNum(options.numerator, options.denominator, options.sign);
-        break;
+    if (input instanceof MoNumber) {
+      _this.setProp({
+        sign: input.props.sign,
+        numerator: input.props.numerator,
+        denominator: input.props.denominator
+      });
+    } else {
+      switch (helper.getType(input)) {
+        case 'object':
+          var options = input;
+          if (!_this._checkNumsLegal(options.numerator, options.denominator)) return _possibleConstructorReturn(_this);
+          _this._initNum(options.numerator, options.denominator, options.sign);
+          break;
 
-      case 'string':
-      case 'number':
-      default:
-        if (!_this._checkNumsLegal(input)) return _possibleConstructorReturn(_this);
-        _this._initNum(input);
+        case 'number':
+        case 'string':
+        default:
+          if (!_this._checkNumsLegal(input)) return _possibleConstructorReturn(_this);
+          _this._initNum(input);
+      }
     }
     return _this;
   }
@@ -400,6 +169,7 @@ var MoNumber = function (_MoBase) {
       }
 
       if (helper.isArr(nums[0])) nums = nums[0];
+
       return nums.every(function (num) {
         return util.checkNumLegal(num);
       });
@@ -415,9 +185,12 @@ var MoNumber = function (_MoBase) {
 
       numerator = util.parseNum(numerator);
       denominator = util.parseNum(denominator);
+
       this._handleSign(numerator, denominator, sign);
+
       numerator = util.dropSign(numerator);
       denominator = util.dropSign(denominator);
+
       this._handleFraction(numerator, denominator);
     }
 
@@ -427,6 +200,7 @@ var MoNumber = function (_MoBase) {
     key: '_handleSign',
     value: function _handleSign(numerator, denominator, sign) {
       sign = util.getNumsSign(numerator, denominator, util.signStrToNum(sign));
+
       this.setProp({ sign: sign });
     }
 
@@ -436,11 +210,15 @@ var MoNumber = function (_MoBase) {
     key: '_handleFraction',
     value: function _handleFraction(numerator, denominator) {
       var decimalDigit = Math.max(util.getDecimalDigit(numerator), util.getDecimalDigit(denominator));
+
       numerator = helper.multiply(numerator, 10, decimalDigit);
       denominator = helper.multiply(denominator, 10, decimalDigit);
+
       var greatestCommonDivisor = util.getGreatestCommonDivisor(numerator, denominator);
+
       numerator = numerator / greatestCommonDivisor;
       denominator = denominator / greatestCommonDivisor;
+
       this.setProp({ numerator: numerator, denominator: denominator });
     }
 
@@ -453,6 +231,7 @@ var MoNumber = function (_MoBase) {
           sign = _props.sign,
           numerator = _props.numerator,
           denominator = _props.denominator;
+
 
       return numerator / denominator * util.signStrToNum(sign);
     }
@@ -502,7 +281,8 @@ var MoNumber = function (_MoBase) {
   }, {
     key: 'isEqual',
     value: function isEqual(input) {
-      var target = input instanceof MoNumber ? input : new MoNumber(input);
+      var target = new MoNumber(input);
+
       return this.props.sign === target.props.sign && this.props.numerator === target.props.numerator && this.props.denominator === target.props.denominator;
     }
 
@@ -515,7 +295,9 @@ var MoNumber = function (_MoBase) {
       var signMap = {
         negative: 'positive'
       };
+
       options.sign = signMap[options.sign] || options.sign;
+
       return new MoNumber(options);
     }
 
@@ -529,7 +311,9 @@ var MoNumber = function (_MoBase) {
         positive: 'negative',
         negative: 'positive'
       };
+
       options.sign = signMap[options.sign] || options.sign;
+
       return new MoNumber(options);
     }
 
@@ -539,6 +323,7 @@ var MoNumber = function (_MoBase) {
     key: 'getReciprocal',
     value: function getReciprocal() {
       var options = _extends({}, this.props);
+
       if (this.props.numerator === 0) {
         options.numerator = 0;
         options.denominator = 1;
@@ -546,6 +331,7 @@ var MoNumber = function (_MoBase) {
         options.numerator = this.props.denominator;
         options.denominator = this.props.numerator;
       }
+
       return new MoNumber(options);
     }
 
@@ -554,11 +340,12 @@ var MoNumber = function (_MoBase) {
   }, {
     key: 'add',
     value: function add(input) {
-      var target = input instanceof MoNumber ? input : new MoNumber(input);
+      var target = new MoNumber(input);
       var denominator = util.getLowestCommonMultiple(this.props.denominator, target.props.denominator);
       var thisNumerator = this.props.numerator * (denominator / this.props.denominator) * util.signStrToNum(this.props.sign);
       var targetNumerator = target.props.numerator * (denominator / target.props.denominator) * util.signStrToNum(target.props.sign);
       var numerator = thisNumerator + targetNumerator;
+
       return new MoNumber({ numerator: numerator, denominator: denominator });
     }
 
@@ -567,7 +354,8 @@ var MoNumber = function (_MoBase) {
   }, {
     key: 'minus',
     value: function minus(input) {
-      var target = input instanceof MoNumber ? input : new MoNumber(input);
+      var target = new MoNumber(input);
+
       return this.add(target.getOppositeNum());
     }
 
@@ -576,10 +364,11 @@ var MoNumber = function (_MoBase) {
   }, {
     key: 'multiply',
     value: function multiply(input) {
-      var target = input instanceof MoNumber ? input : new MoNumber(input);
+      var target = new MoNumber(input);
       var numerator = this.props.numerator * target.props.numerator;
       var denominator = this.props.denominator * target.props.denominator;
       var sign = util.getNumsSign(util.signStrToNum(this.props.sign), util.signStrToNum(target.props.sign));
+
       return new MoNumber({ sign: sign, numerator: numerator, denominator: denominator });
     }
 
@@ -588,7 +377,8 @@ var MoNumber = function (_MoBase) {
   }, {
     key: 'devide',
     value: function devide(input) {
-      var target = input instanceof MoNumber ? input : new MoNumber(input);
+      var target = new MoNumber(input);
+
       return this.multiply(target.getReciprocal());
     }
 
@@ -601,6 +391,7 @@ var MoNumber = function (_MoBase) {
       var numerator = Math.pow(this.props.numerator, exponent);
       var denominator = Math.pow(this.props.denominator, exponent);
       var sign = util.getNumsSign(new Array(exponent).fill(util.signStrToNum(this.props.sign)));
+
       return new MoNumber({ sign: sign, numerator: numerator, denominator: denominator });
     }
   }]);
@@ -609,20 +400,427 @@ var MoNumber = function (_MoBase) {
 }(_base2.default);
 
 module.exports = MoNumber;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(3)))
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(helper) {
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 基础类
+ */
+
+var MoBase = function () {
+  function MoBase() {
+    _classCallCheck(this, MoBase);
+
+    /* 默认属性 */
+    this.props = {};
+  }
+
+  /* 更新属性 */
+
+
+  _createClass(MoBase, [{
+    key: "setProp",
+    value: function setProp(props) {
+      var _this = this;
+
+      helper.forEachObj(props, function (value, prop) {
+        _this.props[prop] = value;
+      });
+    }
+  }]);
+
+  return MoBase;
+}();
+
+module.exports = MoBase;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(config, helper, util) {
+/* WEBPACK VAR INJECTION */(function(helper) {
 
-var _number = __webpack_require__(2);
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+/**
+ * 功能方法
+ */
+
+/* 正则规则 */
+var rules = {
+  number: /^[+-]?[\d\s]+\.?[\d\s]*$/, // 数字 或 字符串型数字
+  zero: /^[+-]?0$/, // 零
+  positive: /^\+?[^-]/, // 正数
+  negative: /^-/, // 负数
+  sign: /^[+-]?/, // 符号
+  integer: /^[^.]+$/, // 整数
+  decimal: /\./, // 小数
+  decimalDigit: /\.(\d+)/ // 小数位数
+
+
+  /* 符号对应关系 */
+};var signStrNumMap = {
+  positive: 1,
+  negative: -1,
+  zero: 0
+};
+
+var util = {
+
+  /* 将输入数字转化为数字类型 */
+  parseNum: function parseNum(inputNum) {
+    var num = void 0;
+
+    switch (helper.getType(inputNum)) {
+      case 'number':
+        num = inputNum;
+        break;
+
+      case 'string':
+        num = helper.toNum(inputNum.replace(/\s/g, ''));
+        break;
+    }
+
+    return num;
+  },
+
+
+  /* 将输入数字转化为字符串类型 */
+  parseNumStr: function parseNumStr(inputNum) {
+    return helper.toStr(this.parseNum(inputNum));
+  },
+
+
+  /* 检查数字是否合法 */
+  checkNumLegal: function checkNumLegal(inputNum) {
+    var numStr = this.parseNumStr(inputNum);
+
+    return rules.number.test(numStr);
+  },
+
+
+  /* 获取符号对应数字 */
+  signStrToNum: function signStrToNum(inputStr) {
+    return signStrNumMap[inputStr];
+  },
+
+
+  /* 获取符号对应字符串 */
+  signNumToStr: function signNumToStr(inputNum) {
+    var num = this.parseNum(inputNum);
+    var targetStr = void 0;
+
+    helper.forEachObj(signStrNumMap, function (signNum, signStr) {
+      if (num === signNum) targetStr = signStr;
+    });
+
+    return targetStr;
+  },
+
+
+  /* 判断符号：零、正、负 */
+  getSign: function getSign(inputNum) {
+    var numStr = this.parseNumStr(inputNum);
+
+    if (rules.zero.test(numStr)) {
+      return 'zero';
+    } else if (rules.positive.test(numStr)) {
+      return 'positive';
+    } else if (rules.negative.test(numStr)) {
+      return 'negative';
+    }
+  },
+
+
+  /* 判断多个数字合并后的符号 */
+  getNumsSign: function getNumsSign() {
+    var _this = this;
+
+    for (var _len = arguments.length, inputNums = Array(_len), _key = 0; _key < _len; _key++) {
+      inputNums[_key] = arguments[_key];
+    }
+
+    if (helper.isArr(inputNums[0])) inputNums = inputNums[0];
+
+    var sign = void 0;
+    var signs = inputNums.map(function (inputNum) {
+      return _this.getSign(inputNum);
+    });
+
+    if (signs.includes('zero')) sign = 'zero';else sign = this.signNumToStr(helper.multiply(1, -1, helper.countArrItem(signs, 'negative')));
+
+    return sign;
+  },
+
+
+  /* 去掉符号 */
+  dropSign: function dropSign(inputNum) {
+    var numStr = this.parseNumStr(inputNum);
+
+    return helper.toNum(numStr.replace(rules.sign, ''));
+  },
+
+
+  /* 判断是否为零 */
+  isZero: function isZero(inputNum) {
+    var numStr = this.parseNumStr(inputNum);
+
+    return this.getSign(numStr) === 'zero';
+  },
+
+
+  /* 判断是否为正 */
+  isPositive: function isPositive(inputNum) {
+    var numStr = this.parseNumStr(inputNum);
+
+    return this.getSign(numStr) === 'positive';
+  },
+
+
+  /* 判断是否为负 */
+  isNegative: function isNegative(inputNum) {
+    var numStr = this.parseNumStr(inputNum);
+
+    return this.getSign(numStr) === 'negative';
+  },
+
+
+  /* 判断是否整数 */
+  isInteger: function isInteger(inputNum) {
+    var numStr = this.parseNumStr(inputNum);
+
+    return rules.integer.test(numStr);
+  },
+
+
+  /* 判断是否为小数 */
+  isDecimal: function isDecimal(inputNum) {
+    var numStr = this.parseNumStr(inputNum);
+
+    return rules.decimal.test(numStr);
+  },
+
+
+  /* 获取小数位数 */
+  getDecimalDigit: function getDecimalDigit(inputNum) {
+    var numStr = this.parseNumStr(inputNum);
+    var match = numStr.match(rules.decimalDigit);
+
+    return helper.toBool(match) ? match[1].length : 0;
+  },
+
+
+  /* 获取因数 */
+  getDivisor: function getDivisor(inputNum) {
+    var num = this.parseNum(inputNum);
+    var divisor = [];
+    var i = 2;
+
+    while (i <= num) {
+      if (i === num) {
+        divisor.push(i);
+        i++;
+      } else if (num % i === 0) {
+        divisor.push(i);
+        num /= i;
+      } else {
+        i++;
+      }
+    }
+
+    return divisor;
+  },
+
+
+  /* 获取最大公因数（公约数） */
+  getGreatestCommonDivisor: function getGreatestCommonDivisor() {
+    var _this2 = this,
+        _helper;
+
+    for (var _len2 = arguments.length, inputNums = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      inputNums[_key2] = arguments[_key2];
+    }
+
+    if (helper.isArr(inputNums[0])) inputNums = inputNums[0];
+
+    var divisors = inputNums.map(function (inputNum) {
+      return _this2.parseNum(inputNum);
+    }).map(function (num) {
+      return _this2.getDivisor(num);
+    });
+    var commonDivisors = [];
+
+    (_helper = helper).intersectArr.apply(_helper, _toConsumableArray(divisors)).forEach(function (num) {
+      var counts = divisors.map(function (arr) {
+        return helper.countArrItem(arr, num);
+      });
+      commonDivisors.push.apply(commonDivisors, _toConsumableArray(new Array(Math.min.apply(Math, _toConsumableArray(counts))).fill(num)));
+    });
+
+    return commonDivisors.length ? commonDivisors.reduce(function (sum, val) {
+      return sum * val;
+    }) : 1;
+  },
+
+
+  /* 获取最小公倍数 */
+  getLowestCommonMultiple: function getLowestCommonMultiple() {
+    var _this3 = this,
+        _helper2;
+
+    for (var _len3 = arguments.length, inputNums = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+      inputNums[_key3] = arguments[_key3];
+    }
+
+    if (helper.isArr(inputNums[0])) inputNums = inputNums[0];
+
+    var divisors = inputNums.map(function (inputNum) {
+      return _this3.parseNum(inputNum);
+    }).map(function (num) {
+      return _this3.getDivisor(num);
+    });
+    var allDivisors = [];
+
+    (_helper2 = helper).unionArr.apply(_helper2, _toConsumableArray(divisors)).forEach(function (num) {
+      var counts = divisors.map(function (arr) {
+        return helper.countArrItem(arr, num);
+      });
+      allDivisors.push.apply(allDivisors, _toConsumableArray(new Array(Math.max.apply(Math, _toConsumableArray(counts))).fill(num)));
+    });
+
+    return allDivisors.length ? allDivisors.reduce(function (sum, val) {
+      return sum * val;
+    }) : 1;
+  }
+};
+
+module.exports = util;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(helper) {
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _base = __webpack_require__(2);
+
+var _base2 = _interopRequireDefault(_base);
+
+var _number = __webpack_require__(1);
 
 var _number2 = _interopRequireDefault(_number);
 
-var _fraction = __webpack_require__(7);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * 点类
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+var MoDot = function (_MoBase) {
+  _inherits(MoDot, _MoBase);
+
+  function MoDot(input) {
+    _classCallCheck(this, MoDot);
+
+    /* 默认属性 */
+    var _this = _possibleConstructorReturn(this, (MoDot.__proto__ || Object.getPrototypeOf(MoDot)).call(this));
+
+    _this.props = {
+      x: null,
+      y: null,
+      z: null
+    };
+
+    if (input instanceof MoDot) {
+      _this.setProp({
+        x: input.props.x,
+        y: input.props.y,
+        z: input.props.z
+      });
+    } else {
+      switch (helper.getType(input)) {
+        case 'object':
+          var props = input;
+          _this.setProp({
+            x: props.x,
+            y: props.y,
+            z: props.z
+          });
+          break;
+
+        case 'array':
+          var _input = _slicedToArray(input, 3),
+              x = _input[0],
+              y = _input[1],
+              z = _input[2];
+
+          _this._initDot(x, y, z);
+          break;
+      }
+    }
+    return _this;
+  }
+
+  /* 初始化点 */
+
+
+  _createClass(MoDot, [{
+    key: '_initDot',
+    value: function _initDot(x, y) {
+      var z = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+
+      this.setProp({ x: x, y: y, z: z });
+    }
+  }]);
+
+  return MoDot;
+}(_base2.default);
+
+module.exports = MoDot;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(config, helper, util) {
+
+var _number = __webpack_require__(1);
+
+var _number2 = _interopRequireDefault(_number);
+
+var _dot = __webpack_require__(4);
+
+var _dot2 = _interopRequireDefault(_dot);
+
+var _line = __webpack_require__(8);
+
+var _line2 = _interopRequireDefault(_line);
+
+var _fraction = __webpack_require__(9);
 
 var _fraction2 = _interopRequireDefault(_fraction);
 
@@ -643,6 +841,7 @@ if (config.isDev()) {
 }
 
 /* 返回 math object 对象 */
+
 var mo = function mo() {
   for (var _len = arguments.length, params = Array(_len), _key = 0; _key < _len; _key++) {
     params[_key] = arguments[_key];
@@ -650,19 +849,24 @@ var mo = function mo() {
 
   return new (Function.prototype.bind.apply(_number2.default, [null].concat(params)))();
 };
+
 mo.Number = _number2.default;
+mo.Dot = _dot2.default;
+mo.Line = _line2.default;
+
 mo.fraction = _fraction2.default;
 
 /* 功能方法 */
+
 helper.forEachObj(util, function (func, name) {
   mo[name] = func;
 });
 
 module.exports = mo;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(0), __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(0), __webpack_require__(3)))
 
 /***/ }),
-/* 4 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -688,10 +892,20 @@ var config = {
 module.exports = config;
 
 /***/ }),
-/* 5 */
-/***/ (function(module, exports) {
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
 
-(function(e, a) { for(var i in a) e[i] = a[i]; }(exports, /******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(true)
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["xd"] = factory();
+	else
+		root["xd"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -699,9 +913,9 @@ module.exports = config;
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -772,12 +986,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var /**
-     * 构造类
-     * 
-     */
+/**
+ * 构造类
+ * 
+ */
 
-XdModule = function () {
+var XdModule = function () {
   function XdModule() {
     var funcs = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
@@ -1564,7 +1778,11 @@ module.exports = xdUrl;
 "use strict";
 
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /**
+                                                                                                                                                                                                                                                                   * 入口文件
+                                                                                                                                                                                                                                                                   *
+                                                                                                                                                                                                                                                                   * 
+                                                                                                                                                                                                                                                                   */
 
 var _modules = __webpack_require__(0);
 
@@ -1612,11 +1830,9 @@ var _url2 = _interopRequireDefault(_url);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } } /**
-                                                                                                                                                                                                     * 入口文件
-                                                                                                                                                                                                     *
-                                                                                                                                                                                                     * 
-                                                                                                                                                                                                     */
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+var xd = _extends({}, _array2.default, _device2.default, _function2.default, _mask2.default, _math2.default, _object2.default, _string2.default, _support2.default, _type2.default, _url2.default);
 
 var xdOverview = new _modules2.default({
   chain: function chain() {
@@ -1624,31 +1840,40 @@ var xdOverview = new _modules2.default({
       args[_key] = arguments[_key];
     }
 
-    if (args.length < 2) return null;
-    var superStar = args.shift();
+    if (args.length < 2) return args[0];
+    var major = args.shift();
     args.forEach(function (ring) {
+      var func = void 0;
+      var params = void 0;
       if (_type2.default.isArr(ring)) {
-        superStar = xd[ring.shift()].apply(xd, [superStar].concat(_toConsumableArray(ring)));
-      } else if (_type2.default.isStr(ring)) {
-        superStar = xd[ring](superStar);
+        func = ring.shift();
+        params = [major].concat(_toConsumableArray(ring));
+      } else {
+        func = ring;
+        params = [major];
       }
+      if (xd[func] !== undefined) {
+        func = xd[func].bind(xd);
+      }
+      major = func.apply(undefined, _toConsumableArray(params));
     });
-    return superStar;
+    return major;
   }
 });
 
-var xd = _extends({}, _array2.default, _device2.default, _function2.default, _mask2.default, _math2.default, _object2.default, _string2.default, _support2.default, _type2.default, _url2.default, xdOverview);
+xd = _extends({}, xd, xdOverview);
 
 Object.freeze(xd);
 
 module.exports = xd;
 
 /***/ })
-/******/ ])));
+/******/ ]);
+});
 //# sourceMappingURL=index.js.map
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1656,48 +1881,108 @@ module.exports = xd;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _base = __webpack_require__(2);
+
+var _base2 = _interopRequireDefault(_base);
+
+var _number = __webpack_require__(1);
+
+var _number2 = _interopRequireDefault(_number);
+
+var _dot = __webpack_require__(4);
+
+var _dot2 = _interopRequireDefault(_dot);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-/**
- * 基础类
- */
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-var MoBase = function () {
-  function MoBase() {
-    _classCallCheck(this, MoBase);
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * 直线 / 线段类
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+var MoLine = function (_MoBase) {
+  _inherits(MoLine, _MoBase);
+
+  function MoLine() {
+    _classCallCheck(this, MoLine);
 
     /* 默认属性 */
-    this.props = {};
+    var _this = _possibleConstructorReturn(this, (MoLine.__proto__ || Object.getPrototypeOf(MoLine)).call(this));
+
+    _this.props = {
+      slope: null, // 斜率
+      intercept: null, // 截距
+      dots: [] // 点
+    };
+
+    for (var _len = arguments.length, inputs = Array(_len), _key = 0; _key < _len; _key++) {
+      inputs[_key] = arguments[_key];
+    }
+
+    if (inputs[0] instanceof MoLine) {
+      _this.setProp({
+        slope: inputs[0].props.slope,
+        intercept: inputs[0].props.intercept
+      });
+    } else if (inputs[0] instanceof _dot2.default) {
+      var dots = inputs;
+      _this._initLine(dots);
+    } else {
+      switch (helper.getType(inputs[0])) {
+        case 'object':
+          var props = inputs[0];
+          _this.setProp({
+            slope: props.slope,
+            intercept: props.intercept
+          });
+          break;
+
+        case 'array':
+          var _dots = inputs;
+          _this._initLine(_dots);
+          break;
+      }
+    }
+    return _this;
   }
 
-  /* 更新属性 */
+  /* 初始化直线 */
 
 
-  _createClass(MoBase, [{
-    key: "setProp",
-    value: function setProp(props) {
-      var _this = this;
+  _createClass(MoLine, [{
+    key: '_initLine',
+    value: function _initLine(dots) {
+      var dotA = new _dot2.default(dots[0]);
+      var dotB = new _dot2.default(dots[1]);
 
-      helper.forEachObj(props, function (value, prop) {
-        _this.props[prop] = value;
+      var slope = new _number2.default(dotA.props.y).minus(dotB.props.y).devide(new _number2.default(dotA.props.x).minus(dotB.props.x));
+      var intercept = new _number2.default(dotA.props.y).minus(new _number2.default(dotA.props.x).multiply(slope));
+
+      this.setProp({
+        slope: slope,
+        intercept: intercept,
+        dots: [dotA, dotB]
       });
     }
   }]);
 
-  return MoBase;
-}();
+  return MoLine;
+}(_base2.default);
 
-module.exports = MoBase;
+module.exports = MoLine;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(helper) {
 
-var _number = __webpack_require__(2);
+var _number = __webpack_require__(1);
 
 var _number2 = _interopRequireDefault(_number);
 
@@ -1710,10 +1995,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var moFraction = function moFraction() {
   if (helper.isObj(arguments.length <= 0 ? undefined : arguments[0])) {
     var options = arguments.length <= 0 ? undefined : arguments[0];
+
     return new _number2.default(options);
   } else {
     var numerator = helper.isUndefined(arguments.length <= 0 ? undefined : arguments[0]) ? 1 : arguments.length <= 0 ? undefined : arguments[0];
     var denominator = helper.isUndefined(arguments.length <= 1 ? undefined : arguments[1]) ? 1 : arguments.length <= 1 ? undefined : arguments[1];
+
     return new _number2.default({ numerator: numerator, denominator: denominator });
   }
 }; /**

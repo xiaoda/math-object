@@ -3,6 +3,7 @@
  */
 
 import MoNumber from './modules/number'
+import MoDot from './modules/dot'
 import MoLine from './modules/line'
 import moFraction from './modules/fraction'
 
@@ -19,7 +20,9 @@ if (config.isDev()) {
 let mo = (...params) => new MoNumber(...params)
 
 mo.Number = MoNumber
+mo.Dot = MoDot
 mo.Line = MoLine
+
 mo.fraction = moFraction
 
 /* 功能方法 */
