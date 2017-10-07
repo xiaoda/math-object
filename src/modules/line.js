@@ -1,5 +1,5 @@
 /**
- * 直线 / 线段类
+ * 直线类
  */
 
 import MoBase from './base'
@@ -12,9 +12,8 @@ class MoLine extends MoBase {
 
     /* 默认属性 */
     this.props = {
-      slope: null,     // 斜率
-      intercept: null, // 截距
-      dots: []         // 点
+      slope: null,    // 斜率
+      intercept: null // 截距
     }
 
     if (inputs[0] instanceof MoLine) {
@@ -51,11 +50,7 @@ class MoLine extends MoBase {
     let slope = new MoNumber(dotA.props.y).minus(dotB.props.y).devide(new MoNumber(dotA.props.x).minus(dotB.props.x))
     let intercept = new MoNumber(dotA.props.y).minus(new MoNumber(dotA.props.x).multiply(slope))
 
-    this.setProp({
-      slope,
-      intercept,
-      dots: [dotA, dotB]
-    })
+    this.setProp({slope, intercept})
   }
 }
 

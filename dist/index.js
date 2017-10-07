@@ -1900,7 +1900,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * 直线 / 线段类
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * 直线类
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 */
 
 var MoLine = function (_MoBase) {
@@ -1914,8 +1914,7 @@ var MoLine = function (_MoBase) {
 
     _this.props = {
       slope: null, // 斜率
-      intercept: null, // 截距
-      dots: [] // 点
+      intercept: null // 截距
     };
 
     for (var _len = arguments.length, inputs = Array(_len), _key = 0; _key < _len; _key++) {
@@ -1961,11 +1960,7 @@ var MoLine = function (_MoBase) {
       var slope = new _number2.default(dotA.props.y).minus(dotB.props.y).devide(new _number2.default(dotA.props.x).minus(dotB.props.x));
       var intercept = new _number2.default(dotA.props.y).minus(new _number2.default(dotA.props.x).multiply(slope));
 
-      this.setProp({
-        slope: slope,
-        intercept: intercept,
-        dots: [dotA, dotB]
-      });
+      this.setProp({ slope: slope, intercept: intercept });
     }
   }]);
 
