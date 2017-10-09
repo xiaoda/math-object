@@ -77,6 +77,8 @@ class MoNumber extends MoBase {
     numerator = numerator / greatestCommonDivisor
     denominator = denominator / greatestCommonDivisor
 
+    if (numerator === 0) denominator = 1
+
     this.setProp({numerator, denominator})
   }
 
@@ -123,6 +125,17 @@ class MoNumber extends MoBase {
     )
   }
 
+  /* 判断是否不相等 */
+  isNotEqual (input) {
+    let target = new MoNumber(input)
+
+    return (
+      this.props.sign !== target.props.sign ||
+      this.props.numerator !== target.props.numerator ||
+      this.props.denominator !== target.props.denominator
+    )
+  }
+
   /* 获取绝对值 */
   getAbsoluteVal () {
     let options = {...this.props}
@@ -155,6 +168,8 @@ class MoNumber extends MoBase {
     if (this.props.numerator === 0) {
       options.numerator = 0
       options.denominator = 1
+
+      console.error('error: trying to get reciprocal of 0, should be infinity')
     } else {
       options.numerator = this.props.denominator
       options.denominator = this.props.numerator
@@ -187,6 +202,8 @@ class MoNumber extends MoBase {
     let numerator = this.props.numerator * target.props.numerator
     let denominator = this.props.denominator * target.props.denominator
     let sign = util.getNumsSign(util.signStrToNum(this.props.sign), util.signStrToNum(target.props.sign))
+
+    if (numerator === 0) denominator = 1
 
     return new MoNumber({sign, numerator, denominator})
   }
