@@ -37,8 +37,7 @@ let webpackConf = {
     noInfo: true
   },
   plugins: [
-    baseConf.plugins.define,
-    baseConf.plugins.provide
+    baseConf.plugins.define
   ]
 }
 

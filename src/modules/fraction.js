@@ -2,7 +2,8 @@
  * 分数函数，返回数字类
  */
 
-import MoNumber from './number'
+const helper = require('../general/helper')
+const MoNumber = require('./number')
 
 /**
  * @param ({sign, numerator, denominator}) 或 (numerator, denominator)

@@ -2,6 +2,8 @@
  * 功能方法
  */
 
+const helper = require('./helper')
+
 /* 正则规则 */
 const rules = {
   number: /^[+-]?[\d\s]+\.?[\d\s]*$/, // 数字 或 字符串型数字

@@ -2,18 +2,13 @@
  * Math Object 入口文件
  */
 
-import MoNumber from './modules/number'
-import MoDot from './modules/dot'
-import MoLine from './modules/line'
-import moFraction from './modules/fraction'
-
-/* log 方法封装 */
-
-if (config.isDev()) {
-  window.C = (...args) => {
-    if (window.console) console.log(...args)
-  }
-}
+const config = require('./general/config')
+const helper = require('./general/helper')
+const util = require('./general/util')
+const MoNumber = require('./modules/number')
+const MoDot = require('./modules/dot')
+const MoLine = require('./modules/line')
+const moFraction = require('./modules/fraction')
 
 /* 返回 math object 对象 */
 

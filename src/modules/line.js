@@ -2,9 +2,10 @@
  * 直线类
  */
 
-import MoBase from './base'
-import MoNumber from './number'
-import MoDot from './dot'
+const helper = require('../general/helper')
+const MoBase = require('./base')
+const MoNumber = require('./number')
+const MoDot = require('./dot')
 
 class MoLine extends MoBase {
   constructor (...inputs) {

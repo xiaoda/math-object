@@ -2,7 +2,7 @@
  * 帮助方法
  */
 
-import xd from 'xdhelper'
+const xd = require('xdhelper')
 
 const helper = {
   ...xd

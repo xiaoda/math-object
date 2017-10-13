@@ -2,6 +2,8 @@
  * 基础类
  */
 
+const helper = require('../general/helper')
+
 class MoBase {
   constructor () {
     /* 默认属性 */

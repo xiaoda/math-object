@@ -24,8 +24,7 @@ let webpackConf = {
   context: path.join(__dirname, '../public'),
   stats: 'errors-only',
   plugins: [
-    baseConf.plugins.define,
-    baseConf.plugins.provide
+    baseConf.plugins.define
   ]
 }
 

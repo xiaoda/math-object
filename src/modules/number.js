@@ -2,7 +2,9 @@
  * 数字类
  */
 
-import MoBase from './base'
+const helper = require('../general/helper')
+const util = require('../general/util')
+const MoBase = require('./base')
 
 class MoNumber extends MoBase {
   constructor (input) {

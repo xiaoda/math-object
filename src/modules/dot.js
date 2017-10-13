@@ -2,8 +2,9 @@
  * 点类
  */
 
-import MoBase from './base'
-import MoNumber from './number'
+const helper = require('../general/helper')
+const MoBase = require('./base')
+const MoNumber = require('./number')
 
 class MoDot extends MoBase {
   constructor (input) {
