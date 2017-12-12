@@ -180,6 +180,22 @@ describe('util', () => {
     })
   })
 
+  describe('#isInfinity()', () => {
+    it('Infinity', () => {
+      assert.equal(
+        mo.isInfinity(Infinity),
+        true
+      )
+    })
+
+    it('not Infinity', () => {
+      assert.equal(
+        mo.isInfinity(123),
+        false
+      )
+    })
+  })
+
   describe('#isZero()', () => {
     it('zero', () => {
       assert.equal(

@@ -6,14 +6,15 @@ const helper = require('./helper')
 
 /* 正则规则 */
 const rules = {
-  number: /^[+-]?[\d\s]+\.?[\d\s]*$/, // 数字 或 字符串型数字
-  zero: /^[+-]?0$/,        // 零
-  positive: /^\+?[^-]/,    // 正数
-  negative: /^-/,          // 负数
-  sign: /^[+-]?/,          // 符号
-  integer: /^[^.]+$/,      // 整数
-  decimal: /\./,           // 小数
-  decimalDigit: /\.(\d+)/  // 小数位数
+  number: /^[+-]?[\s]*([\d\s]+\.?[\d\s]*|Infinity)[\s]*$/, // 数字 或 字符串类型数字
+  infinity: /^[+-]?[\s]*Infinity[\s]*$/, // 无穷大
+  zero: /^[+-]?0$/,                      // 零
+  positive: /^\+?[^-]/,                  // 正数
+  negative: /^-/,                        // 负数
+  sign: /^[+-]?/,                        // 符号
+  integer: /^\d+$/,                      // 整数
+  decimal: /^\d+\.\d+$/,                 // 小数
+  decimalDigit: /^\d+\.(\d+)$/           // 小数位数
 }
 
 /* 符号对应关系 */
@@ -31,6 +32,7 @@ const util = {
 
     switch (helper.getType(inputNum)) {
       case 'number':
+      case 'Infinity':
         num = inputNum
         break
 
@@ -104,6 +106,13 @@ const util = {
     return helper.toNum(numStr.replace(rules.sign, ''))
   },
 
+  /* 判断是否无限大 */
+  isInfinity (inputNum) {
+    let numStr = this.parseNumStr(inputNum)
+
+    return rules.infinity.test(numStr)
+  },
+
   /* 判断是否为零 */
   isZero (inputNum) {
     let numStr = this.parseNumStr(inputNum)
@@ -149,9 +158,11 @@ const util = {
 
   /* 获取因数 */
   getDivisor (inputNum) {
-    let num = this.parseNum(inputNum)
+    let num = Math.abs(this.parseNum(inputNum))
     let divisor = []
     let i = 2
+
+    if (this.isInfinity(num)) return divisor
 
     while (i <= num) {
       if (i === num) {
@@ -172,11 +183,7 @@ const util = {
   getGreatestCommonDivisor (...inputNums) {
     if (helper.isArr(inputNums[0])) inputNums = inputNums[0]
 
-    let divisors = inputNums.map((inputNum) => {
-      return this.parseNum(inputNum)
-    }).map((num) => {
-      return this.getDivisor(num)
-    })
+    let divisors = inputNums.filter((num) => !this.isInfinity(num)).map((num) => this.getDivisor(num))
     let commonDivisors = []
 
     helper.intersectArr(...divisors).forEach((num) => {
@@ -190,12 +197,9 @@ const util = {
   /* 获取最小公倍数 */
   getLowestCommonMultiple (...inputNums) {
     if (helper.isArr(inputNums[0])) inputNums = inputNums[0]
+    if (inputNums.findIndex((num) => this.isInfinity(num)) > -1) return Infinity
 
-    let divisors = inputNums.map((inputNum) => {
-      return this.parseNum(inputNum)
-    }).map((num) => {
-      return this.getDivisor(num)
-    })
+    let divisors = inputNums.map((num) => this.getDivisor(num))
     let allDivisors = []
 
     helper.unionArr(...divisors).forEach((num) => {

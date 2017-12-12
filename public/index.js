@@ -1,3 +1,4 @@
 const mo = require('../src')
 
-console.log(mo(1))
+let result = mo.Number(0).devide(0)
+// console.log(result)

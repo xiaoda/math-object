@@ -57,7 +57,7 @@ class MoNumber extends MoBase {
     numerator = util.dropSign(numerator)
     denominator = util.dropSign(denominator)
 
-    this._handleFraction(numerator, denominator)
+    this._handleFraction(numerator, denominator, this.props.sign)
   }
 
   /* 处理正负 */
@@ -68,7 +68,7 @@ class MoNumber extends MoBase {
   }
 
   /* 处理分数 */
-  _handleFraction (numerator, denominator) {
+  _handleFraction (numerator, denominator, sign) {
     let decimalDigit = Math.max(util.getDecimalDigit(numerator), util.getDecimalDigit(denominator))
 
     numerator = helper.multiply(numerator, 10, decimalDigit)
@@ -79,9 +79,43 @@ class MoNumber extends MoBase {
     numerator = numerator / greatestCommonDivisor
     denominator = denominator / greatestCommonDivisor
 
-    if (numerator === 0) denominator = 1
+    let infinityProcResult = this._handleInfinity(numerator, denominator, sign)
 
-    this.setProp({numerator, denominator})
+    numerator = infinityProcResult.numerator
+    denominator = infinityProcResult.denominator
+    sign = infinityProcResult.sign
+
+    this.setProp({numerator, denominator, sign})
+  }
+
+  /* 处理零、无穷大等极端情况 */
+  _handleInfinity (numerator, denominator, sign) {
+    if (util.isZero(numerator) && util.isZero(denominator)) {
+      numerator = 1
+      denominator = 1
+
+      if (sign === 'zero') sign = util.getNumsSign(numerator, denominator)
+      else sign = util.getNumsSign(numerator, denominator, util.signStrToNum(sign))
+    } else if (util.isInfinity(numerator) && util.isInfinity(denominator)) {
+      numerator = 1
+      denominator = 1
+      sign = util.getNumsSign()
+    } else {
+      if (util.isZero(denominator)) numerator *= Infinity
+      if (util.isInfinity(numerator)) {
+        denominator = 1
+
+        if (sign === 'zero') sign = util.getNumsSign(numerator, denominator)
+        else sign = util.getNumsSign(numerator, denominator, util.signStrToNum(sign))
+      }
+      if (util.isInfinity(denominator)) numerator = 0
+      if (util.isZero(numerator)) {
+        denominator = 1
+        sign = 'zero'
+      }
+    }
+
+    return {numerator, denominator, sign}
   }
 
   /* 获取值 */
@@ -108,7 +142,7 @@ class MoNumber extends MoBase {
 
   /* 判断是否整数 */
   isInteger () {
-    return this.props.denominator === 1
+    return this.props.denominator === 1 && !util.isInfinity(this.props.numerator)
   }
 
   /* 判断是否分数 */
@@ -142,7 +176,9 @@ class MoNumber extends MoBase {
   getAbsoluteVal () {
     let options = {...this.props}
     let signMap = {
-      negative: 'positive'
+      positive: 'positive',
+      negative: 'positive',
+      zero: 'zero'
     }
 
     options.sign = signMap[options.sign] || options.sign
@@ -155,7 +191,8 @@ class MoNumber extends MoBase {
     let options = {...this.props}
     let signMap = {
       positive: 'negative',
-      negative: 'positive'
+      negative: 'positive',
+      zero: 'zero'
     }
 
     options.sign = signMap[options.sign] || options.sign
@@ -167,15 +204,15 @@ class MoNumber extends MoBase {
   getReciprocal () {
     let options = {...this.props}
 
-    if (this.props.numerator === 0) {
-      options.numerator = 0
-      options.denominator = 1
+    options.numerator = this.props.denominator
+    options.denominator = this.props.numerator
+    options.sign = this.props.sign
 
-      console.error('error: trying to get reciprocal of 0, should be infinity')
-    } else {
-      options.numerator = this.props.denominator
-      options.denominator = this.props.numerator
-    }
+    let infinityProcResult = this._handleInfinity(options.numerator, options.denominator, options.sign)
+
+    options.numerator = infinityProcResult.numerator
+    options.denominator = infinityProcResult.denominator
+    options.sign = infinityProcResult.sign
 
     return new MoNumber(options)
   }
@@ -187,6 +224,10 @@ class MoNumber extends MoBase {
     let thisNumerator = this.props.numerator * (denominator / this.props.denominator) * util.signStrToNum(this.props.sign)
     let targetNumerator = target.props.numerator * (denominator / target.props.denominator) * util.signStrToNum(target.props.sign)
     let numerator = thisNumerator + targetNumerator
+    let infinityProcResult = this._handleInfinity(numerator, denominator)
+
+    numerator = infinityProcResult.numerator
+    denominator = infinityProcResult.denominator
 
     return new MoNumber({numerator, denominator})
   }
@@ -204,8 +245,11 @@ class MoNumber extends MoBase {
     let numerator = this.props.numerator * target.props.numerator
     let denominator = this.props.denominator * target.props.denominator
     let sign = util.getNumsSign(util.signStrToNum(this.props.sign), util.signStrToNum(target.props.sign))
+    let infinityProcResult = this._handleInfinity(numerator, denominator, sign)
 
-    if (numerator === 0) denominator = 1
+    numerator = infinityProcResult.numerator
+    denominator = infinityProcResult.denominator
+    sign = infinityProcResult.sign
 
     return new MoNumber({sign, numerator, denominator})
   }
@@ -223,6 +267,11 @@ class MoNumber extends MoBase {
     let numerator = Math.pow(this.props.numerator, exponent)
     let denominator = Math.pow(this.props.denominator, exponent)
     let sign = util.getNumsSign(new Array(exponent).fill(util.signStrToNum(this.props.sign)))
+    let infinityProcResult = this._handleInfinity(numerator, denominator, sign)
+
+    numerator = infinityProcResult.numerator
+    denominator = infinityProcResult.denominator
+    sign = infinityProcResult.sign
 
     return new MoNumber({sign, numerator, denominator})
   }

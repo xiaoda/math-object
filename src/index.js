@@ -14,9 +14,9 @@ const moFraction = require('./modules/fraction')
 
 let mo = (...params) => new MoNumber(...params)
 
-mo.Number = MoNumber
-mo.Dot = MoDot
-mo.Line = MoLine
+mo.Number = (...params) => new MoNumber(...params)
+mo.Dot = (...params) => new MoDot(...params)
+mo.Line = (...params) => new MoLine(...params)
 
 mo.fraction = moFraction
 

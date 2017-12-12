@@ -80,17 +80,15 @@ return /******/ (function(modules) { // webpackBootstrap
 "use strict";
 
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /**
-                                                                                                                                                                                                                                                                   * 帮助方法
-                                                                                                                                                                                                                                                                   */
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _xdhelper = __webpack_require__(7);
+/**
+ * 帮助方法
+ */
 
-var _xdhelper2 = _interopRequireDefault(_xdhelper);
+var xd = __webpack_require__(7);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var helper = _extends({}, _xdhelper2.default);
+var helper = _extends({}, xd);
 
 module.exports = helper;
 
@@ -99,25 +97,25 @@ module.exports = helper;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(helper, util) {
+
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _base = __webpack_require__(2);
-
-var _base2 = _interopRequireDefault(_base);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * 数字类
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * 数字类
+ */
+
+var helper = __webpack_require__(0);
+var util = __webpack_require__(3);
+var MoBase = __webpack_require__(2);
 
 var MoNumber = function (_MoBase) {
   _inherits(MoNumber, _MoBase);
@@ -191,7 +189,7 @@ var MoNumber = function (_MoBase) {
       numerator = util.dropSign(numerator);
       denominator = util.dropSign(denominator);
 
-      this._handleFraction(numerator, denominator);
+      this._handleFraction(numerator, denominator, this.props.sign);
     }
 
     /* 处理正负 */
@@ -208,7 +206,7 @@ var MoNumber = function (_MoBase) {
 
   }, {
     key: '_handleFraction',
-    value: function _handleFraction(numerator, denominator) {
+    value: function _handleFraction(numerator, denominator, sign) {
       var decimalDigit = Math.max(util.getDecimalDigit(numerator), util.getDecimalDigit(denominator));
 
       numerator = helper.multiply(numerator, 10, decimalDigit);
@@ -219,7 +217,44 @@ var MoNumber = function (_MoBase) {
       numerator = numerator / greatestCommonDivisor;
       denominator = denominator / greatestCommonDivisor;
 
-      this.setProp({ numerator: numerator, denominator: denominator });
+      var infinityProcResult = this._handleInfinity(numerator, denominator, sign);
+
+      numerator = infinityProcResult.numerator;
+      denominator = infinityProcResult.denominator;
+      sign = infinityProcResult.sign;
+
+      this.setProp({ numerator: numerator, denominator: denominator, sign: sign });
+    }
+
+    /* 处理零、无穷大等极端情况 */
+
+  }, {
+    key: '_handleInfinity',
+    value: function _handleInfinity(numerator, denominator, sign) {
+      if (util.isZero(numerator) && util.isZero(denominator)) {
+        numerator = 1;
+        denominator = 1;
+
+        if (sign === 'zero') sign = util.getNumsSign(numerator, denominator);else sign = util.getNumsSign(numerator, denominator, util.signStrToNum(sign));
+      } else if (util.isInfinity(numerator) && util.isInfinity(denominator)) {
+        numerator = 1;
+        denominator = 1;
+        sign = util.getNumsSign();
+      } else {
+        if (util.isZero(denominator)) numerator *= Infinity;
+        if (util.isInfinity(numerator)) {
+          denominator = 1;
+
+          if (sign === 'zero') sign = util.getNumsSign(numerator, denominator);else sign = util.getNumsSign(numerator, denominator, util.signStrToNum(sign));
+        }
+        if (util.isInfinity(denominator)) numerator = 0;
+        if (util.isZero(numerator)) {
+          denominator = 1;
+          sign = 'zero';
+        }
+      }
+
+      return { numerator: numerator, denominator: denominator, sign: sign };
     }
 
     /* 获取值 */
@@ -265,7 +300,7 @@ var MoNumber = function (_MoBase) {
   }, {
     key: 'isInteger',
     value: function isInteger() {
-      return this.props.denominator === 1;
+      return this.props.denominator === 1 && !util.isInfinity(this.props.numerator);
     }
 
     /* 判断是否分数 */
@@ -286,6 +321,16 @@ var MoNumber = function (_MoBase) {
       return this.props.sign === target.props.sign && this.props.numerator === target.props.numerator && this.props.denominator === target.props.denominator;
     }
 
+    /* 判断是否不相等 */
+
+  }, {
+    key: 'isNotEqual',
+    value: function isNotEqual(input) {
+      var target = new MoNumber(input);
+
+      return this.props.sign !== target.props.sign || this.props.numerator !== target.props.numerator || this.props.denominator !== target.props.denominator;
+    }
+
     /* 获取绝对值 */
 
   }, {
@@ -293,7 +338,9 @@ var MoNumber = function (_MoBase) {
     value: function getAbsoluteVal() {
       var options = _extends({}, this.props);
       var signMap = {
-        negative: 'positive'
+        positive: 'positive',
+        negative: 'positive',
+        zero: 'zero'
       };
 
       options.sign = signMap[options.sign] || options.sign;
@@ -309,7 +356,8 @@ var MoNumber = function (_MoBase) {
       var options = _extends({}, this.props);
       var signMap = {
         positive: 'negative',
-        negative: 'positive'
+        negative: 'positive',
+        zero: 'zero'
       };
 
       options.sign = signMap[options.sign] || options.sign;
@@ -324,13 +372,15 @@ var MoNumber = function (_MoBase) {
     value: function getReciprocal() {
       var options = _extends({}, this.props);
 
-      if (this.props.numerator === 0) {
-        options.numerator = 0;
-        options.denominator = 1;
-      } else {
-        options.numerator = this.props.denominator;
-        options.denominator = this.props.numerator;
-      }
+      options.numerator = this.props.denominator;
+      options.denominator = this.props.numerator;
+      options.sign = this.props.sign;
+
+      var infinityProcResult = this._handleInfinity(options.numerator, options.denominator, options.sign);
+
+      options.numerator = infinityProcResult.numerator;
+      options.denominator = infinityProcResult.denominator;
+      options.sign = infinityProcResult.sign;
 
       return new MoNumber(options);
     }
@@ -345,6 +395,10 @@ var MoNumber = function (_MoBase) {
       var thisNumerator = this.props.numerator * (denominator / this.props.denominator) * util.signStrToNum(this.props.sign);
       var targetNumerator = target.props.numerator * (denominator / target.props.denominator) * util.signStrToNum(target.props.sign);
       var numerator = thisNumerator + targetNumerator;
+      var infinityProcResult = this._handleInfinity(numerator, denominator);
+
+      numerator = infinityProcResult.numerator;
+      denominator = infinityProcResult.denominator;
 
       return new MoNumber({ numerator: numerator, denominator: denominator });
     }
@@ -368,6 +422,11 @@ var MoNumber = function (_MoBase) {
       var numerator = this.props.numerator * target.props.numerator;
       var denominator = this.props.denominator * target.props.denominator;
       var sign = util.getNumsSign(util.signStrToNum(this.props.sign), util.signStrToNum(target.props.sign));
+      var infinityProcResult = this._handleInfinity(numerator, denominator, sign);
+
+      numerator = infinityProcResult.numerator;
+      denominator = infinityProcResult.denominator;
+      sign = infinityProcResult.sign;
 
       return new MoNumber({ sign: sign, numerator: numerator, denominator: denominator });
     }
@@ -391,23 +450,27 @@ var MoNumber = function (_MoBase) {
       var numerator = Math.pow(this.props.numerator, exponent);
       var denominator = Math.pow(this.props.denominator, exponent);
       var sign = util.getNumsSign(new Array(exponent).fill(util.signStrToNum(this.props.sign)));
+      var infinityProcResult = this._handleInfinity(numerator, denominator, sign);
+
+      numerator = infinityProcResult.numerator;
+      denominator = infinityProcResult.denominator;
+      sign = infinityProcResult.sign;
 
       return new MoNumber({ sign: sign, numerator: numerator, denominator: denominator });
     }
   }]);
 
   return MoNumber;
-}(_base2.default);
+}(MoBase);
 
 module.exports = MoNumber;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(3)))
 
 /***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(helper) {
+
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -416,6 +479,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /**
  * 基础类
  */
+
+var helper = __webpack_require__(0);
 
 var MoBase = function () {
   function MoBase() {
@@ -429,7 +494,7 @@ var MoBase = function () {
 
 
   _createClass(MoBase, [{
-    key: "setProp",
+    key: 'setProp',
     value: function setProp(props) {
       var _this = this;
 
@@ -443,14 +508,13 @@ var MoBase = function () {
 }();
 
 module.exports = MoBase;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(helper) {
+
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
@@ -458,16 +522,19 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
  * 功能方法
  */
 
+var helper = __webpack_require__(0);
+
 /* 正则规则 */
 var rules = {
-  number: /^[+-]?[\d\s]+\.?[\d\s]*$/, // 数字 或 字符串型数字
+  number: /^[+-]?[\s]*([\d\s]+\.?[\d\s]*|Infinity)[\s]*$/, // 数字 或 字符串类型数字
+  infinity: /^[+-]?[\s]*Infinity[\s]*$/, // 无穷大
   zero: /^[+-]?0$/, // 零
   positive: /^\+?[^-]/, // 正数
   negative: /^-/, // 负数
   sign: /^[+-]?/, // 符号
-  integer: /^[^.]+$/, // 整数
-  decimal: /\./, // 小数
-  decimalDigit: /\.(\d+)/ // 小数位数
+  integer: /^\d+$/, // 整数
+  decimal: /^\d+\.\d+$/, // 小数
+  decimalDigit: /^\d+\.(\d+)$/ // 小数位数
 
 
   /* 符号对应关系 */
@@ -485,6 +552,7 @@ var util = {
 
     switch (helper.getType(inputNum)) {
       case 'number':
+      case 'Infinity':
         num = inputNum;
         break;
 
@@ -573,6 +641,14 @@ var util = {
   },
 
 
+  /* 判断是否无限大 */
+  isInfinity: function isInfinity(inputNum) {
+    var numStr = this.parseNumStr(inputNum);
+
+    return rules.infinity.test(numStr);
+  },
+
+
   /* 判断是否为零 */
   isZero: function isZero(inputNum) {
     var numStr = this.parseNumStr(inputNum);
@@ -624,9 +700,11 @@ var util = {
 
   /* 获取因数 */
   getDivisor: function getDivisor(inputNum) {
-    var num = this.parseNum(inputNum);
+    var num = Math.abs(this.parseNum(inputNum));
     var divisor = [];
     var i = 2;
+
+    if (this.isInfinity(num)) return divisor;
 
     while (i <= num) {
       if (i === num) {
@@ -646,8 +724,7 @@ var util = {
 
   /* 获取最大公因数（公约数） */
   getGreatestCommonDivisor: function getGreatestCommonDivisor() {
-    var _this2 = this,
-        _helper;
+    var _this2 = this;
 
     for (var _len2 = arguments.length, inputNums = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
       inputNums[_key2] = arguments[_key2];
@@ -655,14 +732,14 @@ var util = {
 
     if (helper.isArr(inputNums[0])) inputNums = inputNums[0];
 
-    var divisors = inputNums.map(function (inputNum) {
-      return _this2.parseNum(inputNum);
+    var divisors = inputNums.filter(function (num) {
+      return !_this2.isInfinity(num);
     }).map(function (num) {
       return _this2.getDivisor(num);
     });
     var commonDivisors = [];
 
-    (_helper = helper).intersectArr.apply(_helper, _toConsumableArray(divisors)).forEach(function (num) {
+    helper.intersectArr.apply(helper, _toConsumableArray(divisors)).forEach(function (num) {
       var counts = divisors.map(function (arr) {
         return helper.countArrItem(arr, num);
       });
@@ -677,23 +754,23 @@ var util = {
 
   /* 获取最小公倍数 */
   getLowestCommonMultiple: function getLowestCommonMultiple() {
-    var _this3 = this,
-        _helper2;
+    var _this3 = this;
 
     for (var _len3 = arguments.length, inputNums = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
       inputNums[_key3] = arguments[_key3];
     }
 
     if (helper.isArr(inputNums[0])) inputNums = inputNums[0];
+    if (inputNums.findIndex(function (num) {
+      return _this3.isInfinity(num);
+    }) > -1) return Infinity;
 
-    var divisors = inputNums.map(function (inputNum) {
-      return _this3.parseNum(inputNum);
-    }).map(function (num) {
+    var divisors = inputNums.map(function (num) {
       return _this3.getDivisor(num);
     });
     var allDivisors = [];
 
-    (_helper2 = helper).unionArr.apply(_helper2, _toConsumableArray(divisors)).forEach(function (num) {
+    helper.unionArr.apply(helper, _toConsumableArray(divisors)).forEach(function (num) {
       var counts = divisors.map(function (arr) {
         return helper.countArrItem(arr, num);
       });
@@ -707,36 +784,31 @@ var util = {
 };
 
 module.exports = util;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(helper) {
+
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _base = __webpack_require__(2);
-
-var _base2 = _interopRequireDefault(_base);
-
-var _number = __webpack_require__(1);
-
-var _number2 = _interopRequireDefault(_number);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * 点类
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * 点类
+ */
+
+var helper = __webpack_require__(0);
+var MoBase = __webpack_require__(2);
+var MoNumber = __webpack_require__(1);
 
 var MoDot = function (_MoBase) {
   _inherits(MoDot, _MoBase);
@@ -796,49 +868,28 @@ var MoDot = function (_MoBase) {
   }]);
 
   return MoDot;
-}(_base2.default);
+}(MoBase);
 
 module.exports = MoDot;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(config, helper, util) {
 
-var _number = __webpack_require__(1);
-
-var _number2 = _interopRequireDefault(_number);
-
-var _dot = __webpack_require__(4);
-
-var _dot2 = _interopRequireDefault(_dot);
-
-var _line = __webpack_require__(8);
-
-var _line2 = _interopRequireDefault(_line);
-
-var _fraction = __webpack_require__(9);
-
-var _fraction2 = _interopRequireDefault(_fraction);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/* log 方法封装 */
 
 /**
  * Math Object 入口文件
  */
 
-if (config.isDev()) {
-  window.C = function () {
-    var _console;
-
-    if (window.console) (_console = console).log.apply(_console, arguments);
-  };
-}
+var config = __webpack_require__(6);
+var helper = __webpack_require__(0);
+var util = __webpack_require__(3);
+var MoNumber = __webpack_require__(1);
+var MoDot = __webpack_require__(4);
+var MoLine = __webpack_require__(8);
+var moFraction = __webpack_require__(9);
 
 /* 返回 math object 对象 */
 
@@ -847,14 +898,32 @@ var mo = function mo() {
     params[_key] = arguments[_key];
   }
 
-  return new (Function.prototype.bind.apply(_number2.default, [null].concat(params)))();
+  return new (Function.prototype.bind.apply(MoNumber, [null].concat(params)))();
 };
 
-mo.Number = _number2.default;
-mo.Dot = _dot2.default;
-mo.Line = _line2.default;
+mo.Number = function () {
+  for (var _len2 = arguments.length, params = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+    params[_key2] = arguments[_key2];
+  }
 
-mo.fraction = _fraction2.default;
+  return new (Function.prototype.bind.apply(MoNumber, [null].concat(params)))();
+};
+mo.Dot = function () {
+  for (var _len3 = arguments.length, params = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+    params[_key3] = arguments[_key3];
+  }
+
+  return new (Function.prototype.bind.apply(MoDot, [null].concat(params)))();
+};
+mo.Line = function () {
+  for (var _len4 = arguments.length, params = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+    params[_key4] = arguments[_key4];
+  }
+
+  return new (Function.prototype.bind.apply(MoLine, [null].concat(params)))();
+};
+
+mo.fraction = moFraction;
 
 /* 功能方法 */
 
@@ -863,7 +932,6 @@ helper.forEachObj(util, function (func, name) {
 });
 
 module.exports = mo;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(0), __webpack_require__(3)))
 
 /***/ }),
 /* 6 */
@@ -1877,31 +1945,24 @@ module.exports = xd;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(helper) {
+
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _base = __webpack_require__(2);
-
-var _base2 = _interopRequireDefault(_base);
-
-var _number = __webpack_require__(1);
-
-var _number2 = _interopRequireDefault(_number);
-
-var _dot = __webpack_require__(4);
-
-var _dot2 = _interopRequireDefault(_dot);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * 直线类
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * 直线类
+ */
+
+var helper = __webpack_require__(0);
+var MoBase = __webpack_require__(2);
+var MoNumber = __webpack_require__(1);
+var MoDot = __webpack_require__(4);
 
 var MoLine = function (_MoBase) {
   _inherits(MoLine, _MoBase);
@@ -1926,8 +1987,9 @@ var MoLine = function (_MoBase) {
         slope: inputs[0].props.slope,
         intercept: inputs[0].props.intercept
       });
-    } else if (inputs[0] instanceof _dot2.default) {
+    } else if (inputs[0] instanceof MoDot) {
       var dots = inputs;
+
       _this._initLine(dots);
     } else {
       switch (helper.getType(inputs[0])) {
@@ -1954,34 +2016,73 @@ var MoLine = function (_MoBase) {
   _createClass(MoLine, [{
     key: '_initLine',
     value: function _initLine(dots) {
-      var dotA = new _dot2.default(dots[0]);
-      var dotB = new _dot2.default(dots[1]);
+      var dotA = new MoDot(dots[0]);
+      var dotB = new MoDot(dots[1]);
 
-      var slope = new _number2.default(dotA.props.y).minus(dotB.props.y).devide(new _number2.default(dotA.props.x).minus(dotB.props.x));
-      var intercept = new _number2.default(dotA.props.y).minus(new _number2.default(dotA.props.x).multiply(slope));
+      var slope = new MoNumber(dotA.props.y).minus(dotB.props.y).devide(new MoNumber(dotA.props.x).minus(dotB.props.x));
+
+      var intercept = new MoNumber(dotA.props.y).minus(new MoNumber(dotA.props.x).multiply(slope));
 
       this.setProp({ slope: slope, intercept: intercept });
+    }
+
+    /* 判断是否经过点 */
+
+  }, {
+    key: 'throughDot',
+    value: function throughDot(input) {
+      var dot = new MoDot(input);
+
+      return new MoNumber(dot.props.x).multiply(this.props.slope).add(this.props.intercept).isEqual(dot.props.y);
+    }
+
+    /* 判断是否与线相交 */
+
+  }, {
+    key: 'intersectLine',
+    value: function intersectLine() {
+      for (var _len2 = arguments.length, inputs = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        inputs[_key2] = arguments[_key2];
+      }
+
+      var line = new (Function.prototype.bind.apply(MoLine, [null].concat(inputs)))();
+
+      return this.props.slope.isNotEqual(line.props.slope);
+    }
+
+    /* 判断是否与线平行 */
+
+  }, {
+    key: 'parallelLine',
+    value: function parallelLine() {
+      for (var _len3 = arguments.length, inputs = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+        inputs[_key3] = arguments[_key3];
+      }
+
+      var line = new (Function.prototype.bind.apply(MoLine, [null].concat(inputs)))();
+
+      return this.props.slope.isEqual(line.props.slope) && this.props.intercept.isNotEqual(line.props.intercept);
     }
   }]);
 
   return MoLine;
-}(_base2.default);
+}(MoBase);
 
 module.exports = MoLine;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(helper) {
 
-var _number = __webpack_require__(1);
 
-var _number2 = _interopRequireDefault(_number);
+/**
+ * 分数函数，返回数字类
+ */
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var helper = __webpack_require__(0);
+var MoNumber = __webpack_require__(1);
 
 /**
  * @param ({sign, numerator, denominator}) 或 (numerator, denominator)
@@ -1991,19 +2092,16 @@ var moFraction = function moFraction() {
   if (helper.isObj(arguments.length <= 0 ? undefined : arguments[0])) {
     var options = arguments.length <= 0 ? undefined : arguments[0];
 
-    return new _number2.default(options);
+    return new MoNumber(options);
   } else {
     var numerator = helper.isUndefined(arguments.length <= 0 ? undefined : arguments[0]) ? 1 : arguments.length <= 0 ? undefined : arguments[0];
     var denominator = helper.isUndefined(arguments.length <= 1 ? undefined : arguments[1]) ? 1 : arguments.length <= 1 ? undefined : arguments[1];
 
-    return new _number2.default({ numerator: numerator, denominator: denominator });
+    return new MoNumber({ numerator: numerator, denominator: denominator });
   }
-}; /**
-    * 分数函数，返回数字类
-    */
+};
 
 module.exports = moFraction;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ })
 /******/ ]);

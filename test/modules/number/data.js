@@ -187,11 +187,10 @@ const list = [
       'isEqualTo0.1': false,
       getAbsoluteVal: 0,
       getOppositeNum: 0,
-      getReciprocal: 0,
+      getReciprocal: Infinity,
       addSelf: 0,
       minusSelf: 0,
       multiplySelf: 0,
-      devideSelf: 0,
       power3: 0
     }
   },

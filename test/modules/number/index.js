@@ -67,11 +67,15 @@ describe('mo.Number', () => {
   data.funcs.operation.forEach((func) => {
     describe(`#${func}()`, () => {
       data.list.forEach((item) => {
+        let expectVal = item.expect[`${func}Self`]
+
+        if (expectVal === undefined) return
+
         it(item.type, () => {
           let num = new mo.Number(item.input)
           assert.equal(
             num[func](num).getVal(),
-            item.expect[`${func}Self`]
+            expectVal
           )
         })
       })
