@@ -1,4 +1,4 @@
 const mo = require('../src')
 
-let result = mo.Number(1).devide(0)
+let result = mo.Line([1, 1], [1, 2])
 console.log(result)

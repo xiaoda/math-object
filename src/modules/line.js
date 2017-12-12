@@ -45,7 +45,10 @@ class MoLine extends MoBase {
 
     let slope = new MoNumber(dotA.props.y)
       .minus(dotB.props.y)
-      .devide(new MoNumber(dotA.props.x).minus(dotB.props.x))
+      .devide(
+        new MoNumber(dotA.props.x)
+          .minus(dotB.props.x)
+      )
 
     let intercept = new MoNumber(dotA.props.y).minus(new MoNumber(dotA.props.x).multiply(slope))
 
