@@ -90,16 +90,13 @@ class MoNumber extends MoBase {
 
   /* 处理零、无穷大等极端情况 */
   _handleInfinity (numerator, denominator, sign) {
-    if (util.isZero(numerator) && util.isZero(denominator)) {
-      numerator = 1
-      denominator = 1
+    let conditionAllZero = util.isZero(numerator) && util.isZero(denominator)
+    let conditionAllInfinity = util.isInfinity(numerator) && util.isInfinity(denominator)
 
-      if (sign === 'zero') sign = util.getNumsSign(numerator, denominator)
-      else sign = util.getNumsSign(numerator, denominator, util.signStrToNum(sign))
-    } else if (util.isInfinity(numerator) && util.isInfinity(denominator)) {
-      numerator = 1
-      denominator = 1
-      sign = util.getNumsSign()
+    if (conditionAllZero || conditionAllInfinity) {
+      numerator = null
+      denominator = null
+      sign = null
     } else {
       if (util.isZero(denominator)) numerator *= Infinity
       if (util.isInfinity(numerator)) {
