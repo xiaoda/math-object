@@ -18,18 +18,15 @@ class MoNumber extends MoBase {
     }
 
     if (input instanceof MoNumber) {
-      this.setProp({
-        sign: input.props.sign,
-        numerator: input.props.numerator,
-        denominator: input.props.denominator
-      })
+      this.setProp(input.props)
     } else {
       switch (helper.getType(input)) {
-        case 'object':
-          let options = input
-          if (!this._checkNumsLegal(options.numerator, options.denominator)) return
-          this._initNum(options.numerator, options.denominator, options.sign)
+        case 'object': {
+          let {numerator, denominator, sign} = input
+          if (!this._checkNumsLegal(numerator, denominator)) return
+          this._initNum(numerator, denominator, sign)
           break
+        }
 
         case 'number':
         case 'string':

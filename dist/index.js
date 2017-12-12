@@ -133,18 +133,19 @@ var MoNumber = function (_MoBase) {
     };
 
     if (input instanceof MoNumber) {
-      _this.setProp({
-        sign: input.props.sign,
-        numerator: input.props.numerator,
-        denominator: input.props.denominator
-      });
+      _this.setProp(input.props);
     } else {
       switch (helper.getType(input)) {
         case 'object':
-          var options = input;
-          if (!_this._checkNumsLegal(options.numerator, options.denominator)) return _possibleConstructorReturn(_this);
-          _this._initNum(options.numerator, options.denominator, options.sign);
-          break;
+          {
+            var numerator = input.numerator,
+                denominator = input.denominator,
+                sign = input.sign;
+
+            if (!_this._checkNumsLegal(numerator, denominator)) return _possibleConstructorReturn(_this);
+            _this._initNum(numerator, denominator, sign);
+            break;
+          }
 
         case 'number':
         case 'string':
@@ -804,30 +805,29 @@ var MoDot = function (_MoBase) {
     };
 
     if (input instanceof MoDot) {
-      _this.setProp({
-        x: input.props.x,
-        y: input.props.y,
-        z: input.props.z
-      });
+      _this.setProp(input.props);
     } else {
       switch (helper.getType(input)) {
         case 'object':
-          var props = input;
-          _this.setProp({
-            x: props.x,
-            y: props.y,
-            z: props.z
-          });
-          break;
+          {
+            var x = input.x,
+                y = input.y,
+                z = input.z;
+
+            _this._initDot(x, y, z);
+            break;
+          }
 
         case 'array':
-          var _input = _slicedToArray(input, 3),
-              x = _input[0],
-              y = _input[1],
-              z = _input[2];
+          {
+            var _input = _slicedToArray(input, 3),
+                _x = _input[0],
+                _y = _input[1],
+                _z = _input[2];
 
-          _this._initDot(x, y, z);
-          break;
+            _this._initDot(_x, _y, _z);
+            break;
+          }
       }
     }
     return _this;
@@ -1961,10 +1961,7 @@ var MoLine = function (_MoBase) {
     }
 
     if (inputs[0] instanceof MoLine) {
-      _this.setProp({
-        slope: inputs[0].props.slope,
-        intercept: inputs[0].props.intercept
-      });
+      _this.setProp(inputs[0].props);
     } else if (inputs[0] instanceof MoDot) {
       var dots = inputs;
 
@@ -1972,11 +1969,11 @@ var MoLine = function (_MoBase) {
     } else {
       switch (helper.getType(inputs[0])) {
         case 'object':
-          var props = inputs[0];
-          _this.setProp({
-            slope: props.slope,
-            intercept: props.intercept
-          });
+          var _inputs$ = inputs[0],
+              slope = _inputs$.slope,
+              intercept = _inputs$.intercept;
+
+          _this.setProp({ slope: slope, intercept: intercept });
           break;
 
         case 'array':
@@ -2067,13 +2064,20 @@ var MoNumber = __webpack_require__(1);
  * @return MoNumber 数字类
  */
 var moFraction = function moFraction() {
-  if (helper.isObj(arguments.length <= 0 ? undefined : arguments[0])) {
-    var options = arguments.length <= 0 ? undefined : arguments[0];
+  for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+
+  if (helper.isObj(args[0])) {
+    var options = args[0];
 
     return new MoNumber(options);
   } else {
-    var numerator = helper.isUndefined(arguments.length <= 0 ? undefined : arguments[0]) ? 1 : arguments.length <= 0 ? undefined : arguments[0];
-    var denominator = helper.isUndefined(arguments.length <= 1 ? undefined : arguments[1]) ? 1 : arguments.length <= 1 ? undefined : arguments[1];
+    var _args$ = args[0],
+        numerator = _args$ === undefined ? 1 : _args$,
+        _args$2 = args[1],
+        denominator = _args$2 === undefined ? 1 : _args$2;
+
 
     return new MoNumber({ numerator: numerator, denominator: denominator });
   }

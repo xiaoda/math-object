@@ -18,26 +18,20 @@ class MoDot extends MoBase {
     }
 
     if (input instanceof MoDot) {
-      this.setProp({
-        x: input.props.x,
-        y: input.props.y,
-        z: input.props.z
-      })
+      this.setProp(input.props)
     } else {
       switch (helper.getType(input)) {
-        case 'object':
-          let props = input
-          this.setProp({
-            x: props.x,
-            y: props.y,
-            z: props.z
-          })
+        case 'object': {
+          let {x, y, z} = input
+          this._initDot(x, y, z)
           break
+        }
 
-        case 'array':
+        case 'array': {
           let [x, y, z] = input
           this._initDot(x, y, z)
           break
+        }
       }
     }
   }

@@ -18,10 +18,7 @@ class MoLine extends MoBase {
     }
 
     if (inputs[0] instanceof MoLine) {
-      this.setProp({
-        slope: inputs[0].props.slope,
-        intercept: inputs[0].props.intercept
-      })
+      this.setProp(inputs[0].props)
     } else if (inputs[0] instanceof MoDot) {
       let dots = inputs
 
@@ -29,11 +26,8 @@ class MoLine extends MoBase {
     } else {
       switch (helper.getType(inputs[0])) {
         case 'object':
-          let props = inputs[0]
-          this.setProp({
-            slope: props.slope,
-            intercept: props.intercept
-          })
+          let {slope, intercept} = inputs[0]
+          this.setProp({slope, intercept})
           break
 
         case 'array':
