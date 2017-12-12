@@ -205,12 +205,6 @@ class MoNumber extends MoBase {
     options.denominator = this.props.numerator
     options.sign = this.props.sign
 
-    let infinityProcResult = this._handleInfinity(options.numerator, options.denominator, options.sign)
-
-    options.numerator = infinityProcResult.numerator
-    options.denominator = infinityProcResult.denominator
-    options.sign = infinityProcResult.sign
-
     return new MoNumber(options)
   }
 
@@ -221,10 +215,6 @@ class MoNumber extends MoBase {
     let thisNumerator = this.props.numerator * (denominator / this.props.denominator) * util.signStrToNum(this.props.sign)
     let targetNumerator = target.props.numerator * (denominator / target.props.denominator) * util.signStrToNum(target.props.sign)
     let numerator = thisNumerator + targetNumerator
-    let infinityProcResult = this._handleInfinity(numerator, denominator)
-
-    numerator = infinityProcResult.numerator
-    denominator = infinityProcResult.denominator
 
     return new MoNumber({numerator, denominator})
   }
@@ -242,11 +232,6 @@ class MoNumber extends MoBase {
     let numerator = this.props.numerator * target.props.numerator
     let denominator = this.props.denominator * target.props.denominator
     let sign = util.getNumsSign(util.signStrToNum(this.props.sign), util.signStrToNum(target.props.sign))
-    let infinityProcResult = this._handleInfinity(numerator, denominator, sign)
-
-    numerator = infinityProcResult.numerator
-    denominator = infinityProcResult.denominator
-    sign = infinityProcResult.sign
 
     return new MoNumber({sign, numerator, denominator})
   }
@@ -264,11 +249,6 @@ class MoNumber extends MoBase {
     let numerator = Math.pow(this.props.numerator, exponent)
     let denominator = Math.pow(this.props.denominator, exponent)
     let sign = util.getNumsSign(new Array(exponent).fill(util.signStrToNum(this.props.sign)))
-    let infinityProcResult = this._handleInfinity(numerator, denominator, sign)
-
-    numerator = infinityProcResult.numerator
-    denominator = infinityProcResult.denominator
-    sign = infinityProcResult.sign
 
     return new MoNumber({sign, numerator, denominator})
   }

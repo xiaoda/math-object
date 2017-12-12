@@ -231,15 +231,13 @@ var MoNumber = function (_MoBase) {
   }, {
     key: '_handleInfinity',
     value: function _handleInfinity(numerator, denominator, sign) {
-      if (util.isZero(numerator) && util.isZero(denominator)) {
-        numerator = 1;
-        denominator = 1;
+      var conditionAllZero = util.isZero(numerator) && util.isZero(denominator);
+      var conditionAllInfinity = util.isInfinity(numerator) && util.isInfinity(denominator);
 
-        if (sign === 'zero') sign = util.getNumsSign(numerator, denominator);else sign = util.getNumsSign(numerator, denominator, util.signStrToNum(sign));
-      } else if (util.isInfinity(numerator) && util.isInfinity(denominator)) {
-        numerator = 1;
-        denominator = 1;
-        sign = util.getNumsSign();
+      if (conditionAllZero || conditionAllInfinity) {
+        numerator = null;
+        denominator = null;
+        sign = null;
       } else {
         if (util.isZero(denominator)) numerator *= Infinity;
         if (util.isInfinity(numerator)) {
@@ -376,12 +374,6 @@ var MoNumber = function (_MoBase) {
       options.denominator = this.props.numerator;
       options.sign = this.props.sign;
 
-      var infinityProcResult = this._handleInfinity(options.numerator, options.denominator, options.sign);
-
-      options.numerator = infinityProcResult.numerator;
-      options.denominator = infinityProcResult.denominator;
-      options.sign = infinityProcResult.sign;
-
       return new MoNumber(options);
     }
 
@@ -395,10 +387,6 @@ var MoNumber = function (_MoBase) {
       var thisNumerator = this.props.numerator * (denominator / this.props.denominator) * util.signStrToNum(this.props.sign);
       var targetNumerator = target.props.numerator * (denominator / target.props.denominator) * util.signStrToNum(target.props.sign);
       var numerator = thisNumerator + targetNumerator;
-      var infinityProcResult = this._handleInfinity(numerator, denominator);
-
-      numerator = infinityProcResult.numerator;
-      denominator = infinityProcResult.denominator;
 
       return new MoNumber({ numerator: numerator, denominator: denominator });
     }
@@ -422,11 +410,6 @@ var MoNumber = function (_MoBase) {
       var numerator = this.props.numerator * target.props.numerator;
       var denominator = this.props.denominator * target.props.denominator;
       var sign = util.getNumsSign(util.signStrToNum(this.props.sign), util.signStrToNum(target.props.sign));
-      var infinityProcResult = this._handleInfinity(numerator, denominator, sign);
-
-      numerator = infinityProcResult.numerator;
-      denominator = infinityProcResult.denominator;
-      sign = infinityProcResult.sign;
 
       return new MoNumber({ sign: sign, numerator: numerator, denominator: denominator });
     }
@@ -450,11 +433,6 @@ var MoNumber = function (_MoBase) {
       var numerator = Math.pow(this.props.numerator, exponent);
       var denominator = Math.pow(this.props.denominator, exponent);
       var sign = util.getNumsSign(new Array(exponent).fill(util.signStrToNum(this.props.sign)));
-      var infinityProcResult = this._handleInfinity(numerator, denominator, sign);
-
-      numerator = infinityProcResult.numerator;
-      denominator = infinityProcResult.denominator;
-      sign = infinityProcResult.sign;
 
       return new MoNumber({ sign: sign, numerator: numerator, denominator: denominator });
     }
