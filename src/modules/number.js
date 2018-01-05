@@ -113,7 +113,7 @@ class MoNumber extends MoBase {
   }
 
   /* 获取值 */
-  getVal () {
+  val () {
     let {sign, numerator, denominator} = this.props
 
     return numerator / denominator * util.signStrToNum(sign)
@@ -167,7 +167,7 @@ class MoNumber extends MoBase {
   }
 
   /* 获取绝对值 */
-  getAbsoluteVal () {
+  absolute () {
     let options = {...this.props}
     let signMap = {
       positive: 'positive',
@@ -181,7 +181,7 @@ class MoNumber extends MoBase {
   }
 
   /* 获取相反数 */
-  getOppositeNum () {
+  opposite () {
     let options = {...this.props}
     let signMap = {
       positive: 'negative',
@@ -195,7 +195,7 @@ class MoNumber extends MoBase {
   }
 
   /* 获取倒数 */
-  getReciprocal () {
+  reciprocal () {
     let options = {...this.props}
 
     options.numerator = this.props.denominator
@@ -220,7 +220,7 @@ class MoNumber extends MoBase {
   minus (input) {
     let target = new MoNumber(input)
 
-    return this.add(target.getOppositeNum())
+    return this.add(target.opposite())
   }
 
   /* 乘法 */
@@ -237,7 +237,7 @@ class MoNumber extends MoBase {
   devide (input) {
     let target = new MoNumber(input)
 
-    return this.multiply(target.getReciprocal())
+    return this.multiply(target.reciprocal())
   }
 
   /* 乘方（幂、指数运算） */

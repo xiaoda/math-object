@@ -259,8 +259,8 @@ var MoNumber = function (_MoBase) {
     /* 获取值 */
 
   }, {
-    key: 'getVal',
-    value: function getVal() {
+    key: 'val',
+    value: function val() {
       var _props = this.props,
           sign = _props.sign,
           numerator = _props.numerator,
@@ -333,8 +333,8 @@ var MoNumber = function (_MoBase) {
     /* 获取绝对值 */
 
   }, {
-    key: 'getAbsoluteVal',
-    value: function getAbsoluteVal() {
+    key: 'absolute',
+    value: function absolute() {
       var options = _extends({}, this.props);
       var signMap = {
         positive: 'positive',
@@ -350,8 +350,8 @@ var MoNumber = function (_MoBase) {
     /* 获取相反数 */
 
   }, {
-    key: 'getOppositeNum',
-    value: function getOppositeNum() {
+    key: 'opposite',
+    value: function opposite() {
       var options = _extends({}, this.props);
       var signMap = {
         positive: 'negative',
@@ -367,8 +367,8 @@ var MoNumber = function (_MoBase) {
     /* 获取倒数 */
 
   }, {
-    key: 'getReciprocal',
-    value: function getReciprocal() {
+    key: 'reciprocal',
+    value: function reciprocal() {
       var options = _extends({}, this.props);
 
       options.numerator = this.props.denominator;
@@ -399,7 +399,7 @@ var MoNumber = function (_MoBase) {
     value: function minus(input) {
       var target = new MoNumber(input);
 
-      return this.add(target.getOppositeNum());
+      return this.add(target.opposite());
     }
 
     /* 乘法 */
@@ -422,7 +422,7 @@ var MoNumber = function (_MoBase) {
     value: function devide(input) {
       var target = new MoNumber(input);
 
-      return this.multiply(target.getReciprocal());
+      return this.multiply(target.reciprocal());
     }
 
     /* 乘方（幂、指数运算） */
@@ -1952,8 +1952,16 @@ var MoLine = function (_MoBase) {
     var _this = _possibleConstructorReturn(this, (MoLine.__proto__ || Object.getPrototypeOf(MoLine)).call(this));
 
     _this.props = {
-      slope: null, // 斜率
-      intercept: null // 截距
+      orientation: {
+        x: null,
+        y: null,
+        z: null
+      },
+      dot: {
+        x: null,
+        y: null,
+        z: null
+      }
     };
 
     for (var _len = arguments.length, inputs = Array(_len), _key = 0; _key < _len; _key++) {
@@ -1969,11 +1977,9 @@ var MoLine = function (_MoBase) {
     } else {
       switch (helper.getType(inputs[0])) {
         case 'object':
-          var _inputs$ = inputs[0],
-              slope = _inputs$.slope,
-              intercept = _inputs$.intercept;
+          var orientation = inputs[0].orientation;
 
-          _this.setProp({ slope: slope, intercept: intercept });
+          _this.setProp({ orientation: orientation });
           break;
 
         case 'array':
@@ -1994,11 +2000,7 @@ var MoLine = function (_MoBase) {
       var dotA = new MoDot(dots[0]);
       var dotB = new MoDot(dots[1]);
 
-      var slope = new MoNumber(dotA.props.y).minus(dotB.props.y).devide(new MoNumber(dotA.props.x).minus(dotB.props.x));
-
-      var intercept = new MoNumber(dotA.props.y).minus(new MoNumber(dotA.props.x).multiply(slope));
-
-      this.setProp({ slope: slope, intercept: intercept });
+      this.setProp({});
     }
 
     /* 判断是否经过点 */
@@ -2007,8 +2009,6 @@ var MoLine = function (_MoBase) {
     key: 'throughDot',
     value: function throughDot(input) {
       var dot = new MoDot(input);
-
-      return new MoNumber(dot.props.x).multiply(this.props.slope).add(this.props.intercept).isEqual(dot.props.y);
     }
 
     /* 判断是否与线相交 */
@@ -2021,8 +2021,6 @@ var MoLine = function (_MoBase) {
       }
 
       var line = new (Function.prototype.bind.apply(MoLine, [null].concat(inputs)))();
-
-      return this.props.slope.isNotEqual(line.props.slope);
     }
 
     /* 判断是否与线平行 */
@@ -2035,8 +2033,6 @@ var MoLine = function (_MoBase) {
       }
 
       var line = new (Function.prototype.bind.apply(MoLine, [null].concat(inputs)))();
-
-      return this.props.slope.isEqual(line.props.slope) && this.props.intercept.isNotEqual(line.props.intercept);
     }
   }]);
 

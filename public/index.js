@@ -19,25 +19,25 @@ c(numB.isDecimal())
 
 end()
 
-c(numA.getAbsoluteVal().getVal())
-c(numB.getAbsoluteVal().getVal())
+c(numA.absolute().val())
+c(numB.absolute().val())
 
 end()
 
-c(numA.getOppositeNum().getVal())
-c(numB.getOppositeNum().getVal())
+c(numA.opposite().val())
+c(numB.opposite().val())
 
 end()
 
-c(numA.getReciprocal().getVal())
-c(numB.getReciprocal().getVal())
+c(numA.reciprocal().val())
+c(numB.reciprocal().val())
 
 end()
 
-c(numA.add(numB).getVal())
-c(numA.minus(numB).getVal())
-c(numA.multiply(numB).getVal())
-c(numA.devide(numB).getVal())
+c(numA.add(numB).val())
+c(numA.minus(numB).val())
+c(numA.multiply(numB).val())
+c(numA.devide(numB).val())
 
 end()
 

@@ -56,7 +56,7 @@ describe('mo.Number', () => {
         it(item.type, () => {
           let num = new mo.Number(item.input)
           assert.equal(
-            num[func]().getVal(),
+            num[func]().val(),
             item.expect[func]
           )
         })
@@ -74,7 +74,7 @@ describe('mo.Number', () => {
         it(item.type, () => {
           let num = new mo.Number(item.input)
           assert.equal(
-            num[func](num).getVal(),
+            num[func](num).val(),
             expectVal
           )
         })
@@ -87,7 +87,7 @@ describe('mo.Number', () => {
       it(item.type, () => {
         let num = new mo.Number(item.input)
         assert.equal(
-          num.power(3).getVal(),
+          num.power(3).val(),
           item.expect.power3
         )
       })

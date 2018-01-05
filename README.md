@@ -1,10 +1,10 @@
-# math object
+# Math Object
 
 本项目试图用对象表示数学中的数、点、线等，并进行运算。
 
 ## Modules
 
-### Number（数）
+### Number
 
 ``` js
 let numA = mo(10) // 10
@@ -23,28 +23,28 @@ numB.isInteger() // false
 numB.isDecimal() // true
 
 /* 绝对值 */
-numA.getAbsoluteVal().getVal() // 10
-numB.getAbsoluteVal().getVal() // 2.5
+numA.absolute().val() // 10
+numB.absolute().val() // 2.5
 
 /* 相反数 */
-numA.getOppositeNum().getVal() // -10
-numB.getOppositeNum().getVal() // 2.5
+numA.opposite().val() // -10
+numB.opposite().val() // 2.5
 
 /* 倒数 */
-numA.getReciprocal().getVal() // 0.1
-numB.getReciprocal().getVal() // -0.4
+numA.reciprocal().val() // 0.1
+numB.reciprocal().val() // -0.4
 
 /* 四则运算 */
-numA.add(numB).getVal() // 7.5
-numA.minus(numB).getVal() // 12.5
-numA.multiply(numB).getVal() // -25
-numA.devide(numB).getVal() // -4
+numA.add(numB).val() // 7.5
+numA.minus(numB).val() // 12.5
+numA.multiply(numB).val() // -25
+numA.devide(numB).val() // -4
 ```
 
-### Dot（点）
+### Dot
 
 ``` js
 let dot = mo.Dot(1, 2)
 ```
 
-### Line（线）
+### Line
