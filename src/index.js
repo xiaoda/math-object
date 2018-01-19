@@ -7,23 +7,23 @@ const helper = require('./general/helper')
 const util = require('./general/util')
 const MoNumber = require('./modules/number')
 const MoDot = require('./modules/dot')
-const MoLine = require('./modules/line')
+const MoLineSegment = require('./modules/line-segment')
 const moFraction = require('./modules/fraction')
 
 /* 返回 math object 对象 */
 
-let mo = (...params) => new MoNumber(...params)
+let Mo = (...params) => new MoNumber(...params)
 
-mo.Number = (...params) => new MoNumber(...params)
-mo.Dot = (...params) => new MoDot(...params)
-mo.Line = (...params) => new MoLine(...params)
+Mo.Number = (...params) => new MoNumber(...params)
+Mo.Dot = (...params) => new MoDot(...params)
+Mo.LineSegment = (...params) => new MoLineSegment(...params)
 
-mo.fraction = moFraction
+Mo.fraction = moFraction
 
 /* 功能方法 */
 
 helper.forEachObj(util, (func, name) => {
-  mo[name] = func
+  Mo[name] = func
 })
 
-module.exports = mo
+module.exports = Mo

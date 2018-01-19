@@ -1,9 +1,17 @@
-const mo = require('../src')
+const Mo = require('../src')
 const c = (something) => console.log(something)
 const end = () => c('-'.repeat(10))
 
-let numA = mo(10)
-let numB = mo.fraction(-5, 2)
+//*/
+
+let line = Mo.LineSegment([1, 2], [3, 4])
+
+console.log(line)
+
+/*/
+
+let numA = Mo(10)
+let numB = Mo.fraction(-5, 2)
 
 c(numA.isPositive())
 c(numA.isNegative())
@@ -41,4 +49,6 @@ c(numA.devide(numB).val())
 
 end()
 
-let dot = mo.Dot(1, 2)
+let dot = Mo.Dot(1, 2)
+
+//*/

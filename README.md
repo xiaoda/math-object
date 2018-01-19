@@ -1,16 +1,16 @@
 # Math Object
 
-本项目试图用对象表示数学中的数、点、线等，并进行运算。
+本项目试图用对象表示数学中的数、点、线段等，并进行运算。
 
 ## Modules
 
-### Number
+### Number（数）
 
 ``` js
-let numA = mo(10) // 10
-let numB = mo.fraction(-5, 2) // -2.5
+let numA = Mo(10) // 10
+let numB = Mo.fraction(-5, 2) // -2.5
 
-/* 正 or 负 */
+/* 正数 or 负数 */
 numA.isPositive() // true
 numA.isNegative() // false
 numB.isPositive() // false
@@ -41,10 +41,14 @@ numA.multiply(numB).val() // -25
 numA.devide(numB).val() // -4
 ```
 
-### Dot
+### Dot（点）
 
 ``` js
-let dot = mo.Dot(1, 2)
+let dot = Mo.Dot(1, 2)
 ```
 
-### Line
+### Line Segment（线段）
+
+``` js
+let lineSegment = Mo.LineSegment([1, 2], [3, 4])
+```

@@ -9,13 +9,13 @@ const MoNumber = require('./number')
  * @param ({sign, numerator, denominator}) 或 (numerator, denominator)
  * @return MoNumber 数字类
  */
-const moFraction = (...args) => {
-  if (helper.isObj(args[0])) {
-    let options = args[0]
+const moFraction = (...inputs) => {
+  if (helper.isObj(inputs[0])) {
+    let options = inputs[0]
 
     return new MoNumber(options)
   } else {
-    let [numerator = 1, denominator = 1] = args
+    let [numerator = 1, denominator = 1] = inputs
 
     return new MoNumber({numerator, denominator})
   }

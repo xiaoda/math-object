@@ -37,7 +37,7 @@ class MoDot extends MoBase {
   }
 
   /* 初始化点 */
-  _initDot (x, y, z = 1) {
+  _initDot (x, y, z = 0) {
     this.setProp({x, y, z})
   }
 }
