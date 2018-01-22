@@ -206,7 +206,7 @@ class MoNumber extends MoBase {
   }
 
   /* 加法 */
-  add (input) {
+  plus (input) {
     let target = new MoNumber(input)
     let denominator = util.getLowestCommonMultiple(this.props.denominator, target.props.denominator)
     let thisNumerator = this.props.numerator * (denominator / this.props.denominator) * util.signStrToNum(this.props.sign)
@@ -220,7 +220,7 @@ class MoNumber extends MoBase {
   minus (input) {
     let target = new MoNumber(input)
 
-    return this.add(target.opposite())
+    return this.plus(target.opposite())
   }
 
   /* 乘法 */
@@ -242,10 +242,18 @@ class MoNumber extends MoBase {
 
   /* 乘方（幂、指数运算） */
   power (input) {
+    if (this.isNegative() && input < 1 && input > -2) return NaN
+
     let exponent = util.parseNum(input)
     let numerator = Math.pow(this.props.numerator, exponent)
     let denominator = Math.pow(this.props.denominator, exponent)
-    let sign = util.getNumsSign(new Array(exponent).fill(util.signStrToNum(this.props.sign)))
+    let sign
+
+    if (input >= 1 && Number.isInteger(input)) {
+      sign = util.getNumsSign(new Array(exponent).fill(util.signStrToNum(this.props.sign)))
+    } else {
+      sign = this.props.sign
+    }
 
     return new MoNumber({sign, numerator, denominator})
   }

@@ -165,7 +165,10 @@ const util = {
     if (this.isInfinity(num)) return divisor
 
     while (i <= num) {
-      if (i === num) {
+      if (i > 997) {
+        divisor.push(num)
+        break
+      } else if (i === num) {
         divisor.push(i)
         i++
       } else if (num % i === 0) {

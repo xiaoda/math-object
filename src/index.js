@@ -6,7 +6,7 @@ const config = require('./general/config')
 const helper = require('./general/helper')
 const util = require('./general/util')
 const MoNumber = require('./modules/number')
-const MoDot = require('./modules/dot')
+const MoPoint = require('./modules/point')
 const MoLineSegment = require('./modules/line-segment')
 const moFraction = require('./modules/fraction')
 
@@ -15,7 +15,7 @@ const moFraction = require('./modules/fraction')
 let Mo = (...params) => new MoNumber(...params)
 
 Mo.Number = (...params) => new MoNumber(...params)
-Mo.Dot = (...params) => new MoDot(...params)
+Mo.Point = (...params) => new MoPoint(...params)
 Mo.LineSegment = (...params) => new MoLineSegment(...params)
 
 Mo.fraction = moFraction

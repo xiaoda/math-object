@@ -4,9 +4,12 @@ const end = () => c('-'.repeat(10))
 
 //*/
 
-let line = Mo.LineSegment([1, 2], [3, 4])
+let line = Mo.LineSegment([0, 0], [1, 1])
+let point = line.pointOfRatio(-1)
+let len = line.length().val()
+let vector = line.vector()
 
-console.log(line)
+console.log(vector)
 
 /*/
 
@@ -42,13 +45,13 @@ c(numB.reciprocal().val())
 
 end()
 
-c(numA.add(numB).val())
+c(numA.plus(numB).val())
 c(numA.minus(numB).val())
 c(numA.multiply(numB).val())
 c(numA.devide(numB).val())
 
 end()
 
-let dot = Mo.Dot(1, 2)
+let Point = Mo.point(1, 2)
 
 //*/

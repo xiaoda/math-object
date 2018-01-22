@@ -35,16 +35,16 @@ numA.reciprocal().val() // 0.1
 numB.reciprocal().val() // -0.4
 
 /* 四则运算 */
-numA.add(numB).val() // 7.5
+numA.plus(numB).val() // 7.5
 numA.minus(numB).val() // 12.5
 numA.multiply(numB).val() // -25
 numA.devide(numB).val() // -4
 ```
 
-### Dot（点）
+### Point（点）
 
 ``` js
-let dot = Mo.Dot(1, 2)
+let point = Mo.Point(1, 2)
 ```
 
 ### Line Segment（线段）
