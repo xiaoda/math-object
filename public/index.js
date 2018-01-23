@@ -52,6 +52,6 @@ c(numA.devide(numB).val())
 
 end()
 
-let Point = Mo.point(1, 2)
+let point = Mo.Point(1, 2)
 
 //*/
