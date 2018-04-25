@@ -1,6 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
-const baseConf = require('./webpack.base.config')
+const baseConf = require('./base.config')
 
 let webpackConf = {
   entry: {
@@ -8,9 +8,9 @@ let webpackConf = {
   },
   output: {
     filename: '[name].js',
-    path: path.resolve(__dirname, '../dist'),
+    path: path.resolve(__dirname, '../'),
     publicPath: '/',
-    library: 'Mo',
+    library: 'MO',
     libraryTarget: 'umd'
   },
   module: {
@@ -21,7 +21,6 @@ let webpackConf = {
   },
   resolve: baseConf.resolve,
   devtool: 'source-map',
-  context: path.join(__dirname, '../public'),
   stats: 'errors-only',
   plugins: [
     baseConf.plugins.define

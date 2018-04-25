@@ -1,6 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
-const baseConf = require('./webpack.base.config')
+const baseConf = require('./base.config')
 
 let webpackConf = {
   entry: {
@@ -17,10 +17,7 @@ let webpackConf = {
       {
         test: /\.js?$/,
         include: [path.resolve(__dirname, '../public')],
-        loader: 'babel-loader',
-        options: {
-          presets: ['latest', 'stage-1']
-        }
+        loader: 'babel-loader'
       }
     ]
   },

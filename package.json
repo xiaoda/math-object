@@ -2,12 +2,10 @@
   "name": "math-object",
   "version": "0.0.0",
   "description": "an object oriented math library for js",
-  "main": "dist/index.js",
+  "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV='dev' webpack-dev-server --config build/webpack.dev.config.js",
-    "build": "NODE_ENV='prod' webpack --config build/webpack.prod.config.js",
-    "prebuild": "npm run clear",
-    "clear": "rm -rf dist",
+    "start": "NODE_ENV='dev' webpack-dev-server --config webpack/dev.config.js",
+    "build": "NODE_ENV='prod' webpack --config webpack/prod.config.js",
     "test": "node_modules/mocha/bin/mocha"
   },
   "repository": {
@@ -18,18 +16,18 @@
     "js",
     "math",
     "math object",
-    "mo"
+    "Mo"
   ],
   "author": "xiaoda",
   "license": "MIT",
   "dependencies": {
-    "xdhelper": "^1.1.0"
+    "xdhelper": "^2.1.0"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
     "babel-eslint": "^7.2.3",
     "babel-loader": "^7.1.1",
-    "babel-preset-latest": "^6.24.1",
+    "babel-preset-env": "^1.6.1",
     "babel-preset-stage-1": "^6.24.1",
     "eslint": "^4.2.0",
     "eslint-config-standard": "^10.2.1",
