@@ -1,3 +1,3 @@
 require('./general/util')
-require('./modules/number')
-require('./modules/fraction')
+require('./modules/point')
+require('./modules/vector')

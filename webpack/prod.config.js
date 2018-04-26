@@ -4,7 +4,7 @@ const baseConf = require('./base.config')
 
 let webpackConf = {
   entry: {
-    index: '../src/index.js'
+    index: path.resolve(__dirname, '../src/index.js')
   },
   output: {
     filename: '[name].js',

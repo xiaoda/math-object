@@ -22,22 +22,23 @@ const util = {
     let divisors = []
     let i = 2
 
-    if (!Number.isFinite(num)) return divisors
+    if (Number.isFinite(input)) {
+      while (i <= num) {
+        // 第五百个质数：3571
+        if (i > 3571) {
+          divisors.push(num)
+          break
+        } else if (i === num) {
+          divisors.push(i)
+          break
+        }
 
-    while (i <= num) {
-      if (i > 3571) {
-        divisors.push(num)
-        break
-      } else if (i === num) {
-        divisors.push(i)
-        break
-      }
-
-      if (num % i === 0) {
-        divisors.push(i)
-        num /= i
-      } else {
-        i++
+        if (num % i === 0) {
+          divisors.push(i)
+          num /= i
+        } else {
+          i++
+        }
       }
     }
 
@@ -62,7 +63,7 @@ const util = {
   /* 获取最小公倍数 */
   getLeastCommonMultiple (...inputs) {
     if (helper.isArr(inputs[0])) inputs = inputs[0]
-    if (inputs.findIndex((num) => Number.isFinite(num)) > -1) return Infinity
+    if (inputs.findIndex((num) => !Number.isFinite(num)) > -1) return Infinity
 
     let divisors = inputs.map((num) => this.getDivisors(num))
     let allDivisors = []
