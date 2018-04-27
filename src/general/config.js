@@ -12,8 +12,8 @@ const config = {
     return ENV === DEV
   },
 
-  isNotDev () {
-    return ENV !== DEV
+  isProd () {
+    return ENV !== PROD
   }
 
 }

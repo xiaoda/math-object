@@ -8,19 +8,12 @@ let baseConf = {
         enforce: 'pre',
         test: /\.js?$/,
         include: [path.resolve(__dirname, '../src')],
-        loader: 'eslint-loader',
-        options: {
-          failOnWarning: true,
-          failOnError: true
-        }
+        loader: 'eslint-loader'
       },
       babel: {
         test: /\.js?$/,
         include: [path.resolve(__dirname, '../src')],
-        loader: 'babel-loader',
-        options: {
-          presets: ['latest', 'stage-1']
-        }
+        loader: 'babel-loader'
       }
     }
   },
@@ -33,11 +26,6 @@ let baseConf = {
       'process.env': {
         'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
       }
-    }),
-    provide: new webpack.ProvidePlugin({
-      config: 'general/config',
-      helper: 'general/helper',
-      util: 'general/util'
     })
   }
 }

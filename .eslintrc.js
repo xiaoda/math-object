@@ -29,11 +29,5 @@ module.exports = {
     'no-unused-vars': 0,
     // alow multi spaces
     'no-multi-spaces': 0
-  },
-  globals: {
-    config: true,
-    helper: true,
-    util: true,
-    C: true
   }
 }
