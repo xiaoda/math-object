@@ -7,22 +7,22 @@ const helper = require('./helper')
 const util = {
 
   /* 获取相反数 */
-  getOpposite (input) {
-    return helper.toNum(input) * -1
+  getOpposite (num) {
+    return helper.toNum(num) * -1
   },
 
   /* 获取倒数 */
-  getReciprocal (input) {
-    return 1 / helper.toNum(input)
+  getReciprocal (num) {
+    return 1 / helper.toNum(num)
   },
 
   /* 获取因数 */
-  getDivisors (input) {
-    let num = Math.abs(helper.toNum(input))
+  getDivisors (num) {
+    num = Math.abs(helper.toNum(num))
     let divisors = []
     let i = 2
 
-    if (Number.isFinite(input)) {
+    if (Number.isFinite(num)) {
       while (i <= num) {
         // 第五百个质数：3571
         if (i > 3571) {
@@ -46,10 +46,10 @@ const util = {
   },
 
   /* 获取最大公因数 */
-  getGreatestCommonDivisor (...inputs) {
-    if (helper.isArr(inputs[0])) inputs = inputs[0]
+  getGreatestCommonDivisor (...nums) {
+    if (helper.isArr(nums[0])) nums = nums[0]
 
-    let divisors = inputs.filter((num) => Number.isFinite(num)).map((num) => this.getDivisors(num))
+    let divisors = nums.filter((num) => Number.isFinite(num)).map((num) => this.getDivisors(num))
     let commonDivisors = []
 
     helper.intersectArr(...divisors).forEach((num) => {
@@ -61,11 +61,11 @@ const util = {
   },
 
   /* 获取最小公倍数 */
-  getLeastCommonMultiple (...inputs) {
-    if (helper.isArr(inputs[0])) inputs = inputs[0]
-    if (inputs.findIndex((num) => !Number.isFinite(num)) > -1) return Infinity
+  getLeastCommonMultiple (...nums) {
+    if (helper.isArr(nums[0])) nums = nums[0]
+    if (nums.findIndex((num) => !Number.isFinite(num)) > -1) return Infinity
 
-    let divisors = inputs.map((num) => this.getDivisors(num))
+    let divisors = nums.map((num) => this.getDivisors(num))
     let allDivisors = []
 
     helper.unionArr(...divisors).forEach((num) => {

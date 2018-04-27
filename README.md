@@ -1,54 +1,34 @@
 # Math Object
 
-本项目试图用对象表示数学中的数、点、线段等，并进行运算。
+本项目试图用对象表示点、矢量等，使数学运算更加简单。
 
-## Modules
+## Install
 
-### Number（数）
-
-``` js
-let numA = Mo(10) // 10
-let numB = Mo.fraction(-5, 2) // -2.5
-
-/* 正数 or 负数 */
-numA.isPositive() // true
-numA.isNegative() // false
-numB.isPositive() // false
-numB.isNegative() // true
-
-/* 整数 or 分数 */
-numA.isInteger() // true
-numA.isDecimal() // false
-numB.isInteger() // false
-numB.isDecimal() // true
-
-/* 绝对值 */
-numA.absolute().val() // 10
-numB.absolute().val() // 2.5
-
-/* 相反数 */
-numA.opposite().val() // -10
-numB.opposite().val() // 2.5
-
-/* 倒数 */
-numA.reciprocal().val() // 0.1
-numB.reciprocal().val() // -0.4
-
-/* 四则运算 */
-numA.plus(numB).val() // 7.5
-numA.minus(numB).val() // 12.5
-numA.multiply(numB).val() // -25
-numA.devide(numB).val() // -4
+```
+npm install math-object
 ```
 
-### Point（点）
+or
 
-``` js
-let point = Mo.Point(1, 2)
+``` html
+<script src="math-object.js"></script>
 ```
 
-### Line Segment（线段）
+## API Doc
 
-``` js
-let lineSegment = Mo.LineSegment([1, 2], [3, 4])
-```
+### [Point 点类](https://github.com/xiaoda/math-object/wiki/Point-%E7%82%B9%E7%B1%BB)
+* getDistance
+* getPointByVector
+* getPointByPoint
+* getVector
+
+### [Vector 矢量类](https://github.com/xiaoda/math-object/wiki/Vector-%E7%9F%A2%E9%87%8F%E7%B1%BB)
+* mergeVector
+* getVerticalVector
+
+### [Util 功能方法](https://github.com/xiaoda/math-object/wiki/Util-%E5%8A%9F%E8%83%BD%E6%96%B9%E6%B3%95)
+* getOpposite
+* getReciprocal
+* getDivisors
+* getGreatestCommonDivisor
+* getLeastCommonMultiple

@@ -10,7 +10,7 @@ let webpackConf = {
     filename: '[name].js',
     path: path.resolve(__dirname, '../'),
     publicPath: '/',
-    library: 'MO',
+    library: 'Mo',
     libraryTarget: 'umd'
   },
   module: {

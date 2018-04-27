@@ -4,9 +4,9 @@
 	else if(typeof define === 'function' && define.amd)
 		define([], factory);
 	else if(typeof exports === 'object')
-		exports["MO"] = factory();
+		exports["Mo"] = factory();
 	else
-		root["MO"] = factory();
+		root["Mo"] = factory();
 })(typeof self !== 'undefined' ? self : this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -1157,24 +1157,24 @@ var helper = __webpack_require__(0);
 var util = {
 
   /* 获取相反数 */
-  getOpposite: function getOpposite(input) {
-    return helper.toNum(input) * -1;
+  getOpposite: function getOpposite(num) {
+    return helper.toNum(num) * -1;
   },
 
 
   /* 获取倒数 */
-  getReciprocal: function getReciprocal(input) {
-    return 1 / helper.toNum(input);
+  getReciprocal: function getReciprocal(num) {
+    return 1 / helper.toNum(num);
   },
 
 
   /* 获取因数 */
-  getDivisors: function getDivisors(input) {
-    var num = Math.abs(helper.toNum(input));
+  getDivisors: function getDivisors(num) {
+    num = Math.abs(helper.toNum(num));
     var divisors = [];
     var i = 2;
 
-    if (Number.isFinite(input)) {
+    if (Number.isFinite(num)) {
       while (i <= num) {
         // 第五百个质数：3571
         if (i > 3571) {
@@ -1202,13 +1202,13 @@ var util = {
   getGreatestCommonDivisor: function getGreatestCommonDivisor() {
     var _this = this;
 
-    for (var _len = arguments.length, inputs = Array(_len), _key = 0; _key < _len; _key++) {
-      inputs[_key] = arguments[_key];
+    for (var _len = arguments.length, nums = Array(_len), _key = 0; _key < _len; _key++) {
+      nums[_key] = arguments[_key];
     }
 
-    if (helper.isArr(inputs[0])) inputs = inputs[0];
+    if (helper.isArr(nums[0])) nums = nums[0];
 
-    var divisors = inputs.filter(function (num) {
+    var divisors = nums.filter(function (num) {
       return Number.isFinite(num);
     }).map(function (num) {
       return _this.getDivisors(num);
@@ -1232,16 +1232,16 @@ var util = {
   getLeastCommonMultiple: function getLeastCommonMultiple() {
     var _this2 = this;
 
-    for (var _len2 = arguments.length, inputs = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-      inputs[_key2] = arguments[_key2];
+    for (var _len2 = arguments.length, nums = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      nums[_key2] = arguments[_key2];
     }
 
-    if (helper.isArr(inputs[0])) inputs = inputs[0];
-    if (inputs.findIndex(function (num) {
+    if (helper.isArr(nums[0])) nums = nums[0];
+    if (nums.findIndex(function (num) {
       return !Number.isFinite(num);
     }) > -1) return Infinity;
 
-    var divisors = inputs.map(function (num) {
+    var divisors = nums.map(function (num) {
       return _this2.getDivisors(num);
     });
     var allDivisors = [];
