@@ -1,6 +1,6 @@
 {
   "name": "math-object",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "an object oriented math library for js",
   "main": "index.js",
   "engines": {
