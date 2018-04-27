@@ -1,5 +1,9 @@
 # Math Object
 
+[![Version](https://img.shields.io/npm/v/math-object.svg)](https://www.npmjs.com/package/math-object)
+[![Download](https://img.shields.io/npm/dm/math-object.svg)](https://www.npmjs.com/package/math-object)
+[![Build Status](https://travis-ci.org/xiaoda/math-object.svg?branch=master)](https://travis-ci.org/xiaoda/math-object)
+
 本项目试图用对象表示点、矢量等，使数学运算更加简单。
 
 ## Install
