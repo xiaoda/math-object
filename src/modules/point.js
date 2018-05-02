@@ -112,7 +112,7 @@ class MoPoint extends MoBase {
     ]
   }
 
-  /* 根据点获取终点两侧的点 */
+  /* 根据点获取中点两侧的点 */
   getPointsBesideMiddlePoint (point, ratio) {
     return this.getPointsBesideConnection(point, 0.5, ratio)
   }
