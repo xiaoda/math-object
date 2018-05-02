@@ -232,6 +232,18 @@ var MoVector = function (_MoBase) {
       });
     }
 
+    /* 获取方向相反的矢量 */
+
+  }, {
+    key: 'getOppositeVector',
+    value: function getOppositeVector() {
+      return new MoVector({
+        x: this.props.x * -1,
+        y: this.props.y * -1,
+        z: this.props.z * -1
+      });
+    }
+
     /* 获取平面内垂直的矢量 */
 
   }, {
@@ -1387,6 +1399,37 @@ var MoPoint = function (_MoBase) {
         y: this.props.y * (1 - ratio) + point.props.y * ratio,
         z: this.props.z * (1 - ratio) + point.props.z * ratio
       });
+    }
+
+    /* 根据点获取中点 */
+
+  }, {
+    key: 'getMiddlePoint',
+    value: function getMiddlePoint(point) {
+      return this.getPointByPoint(point, 0.5);
+    }
+
+    /* 根据点获取连线两侧的点 */
+
+  }, {
+    key: 'getPointsBesideConnection',
+    value: function getPointsBesideConnection(point, firstRatio, secondRatio) {
+      point = MoPoint.initPoint(point);
+      var specificPoint = this.getPointByPoint(point, firstRatio);
+      var distance = this.getDistance(point);
+      var vector = this.getVector(point);
+      var verticalVector = vector.getVerticalVector();
+      var oppositeVector = verticalVector.getOppositeVector();
+
+      return [specificPoint.getPointByVector(verticalVector, distance * secondRatio), specificPoint.getPointByVector(oppositeVector, distance * secondRatio)];
+    }
+
+    /* 根据点获取终点两侧的点 */
+
+  }, {
+    key: 'getPointsBesideMiddlePoint',
+    value: function getPointsBesideMiddlePoint(point, ratio) {
+      return this.getPointsBesideConnection(point, 0.5, ratio);
     }
 
     /* 根据点获取矢量 */

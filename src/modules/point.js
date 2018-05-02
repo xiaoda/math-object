@@ -92,6 +92,31 @@ class MoPoint extends MoBase {
     })
   }
 
+  /* 根据点获取中点 */
+  getMiddlePoint (point) {
+    return this.getPointByPoint(point, 0.5)
+  }
+
+  /* 根据点获取连线两侧的点 */
+  getPointsBesideConnection (point, firstRatio, secondRatio) {
+    point = MoPoint.initPoint(point)
+    let specificPoint = this.getPointByPoint(point, firstRatio)
+    let distance = this.getDistance(point)
+    let vector = this.getVector(point)
+    let verticalVector = vector.getVerticalVector()
+    let oppositeVector = verticalVector.getOppositeVector()
+
+    return [
+      specificPoint.getPointByVector(verticalVector, distance * secondRatio),
+      specificPoint.getPointByVector(oppositeVector, distance * secondRatio)
+    ]
+  }
+
+  /* 根据点获取终点两侧的点 */
+  getPointsBesideMiddlePoint (point, ratio) {
+    return this.getPointsBesideConnection(point, 0.5, ratio)
+  }
+
   /* 根据点获取矢量 */
   getVector (point) {
     point = MoPoint.initPoint(point)

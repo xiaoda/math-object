@@ -28,6 +28,7 @@ or
 
 ### [Vector 矢量类](https://github.com/xiaoda/math-object/wiki/Vector-%E7%9F%A2%E9%87%8F%E7%B1%BB)
 * mergeVector
+* getOppositeVector
 * getVerticalVector
 
 ### [Util 功能方法](https://github.com/xiaoda/math-object/wiki/Util-%E5%8A%9F%E8%83%BD%E6%96%B9%E6%B3%95)

@@ -56,6 +56,15 @@ class MoVector extends MoBase {
     })
   }
 
+  /* 获取方向相反的矢量 */
+  getOppositeVector () {
+    return new MoVector({
+      x: this.props.x * -1,
+      y: this.props.y * -1,
+      z: this.props.z * -1
+    })
+  }
+
   /* 获取平面内垂直的矢量 */
   getVerticalVector (axis = 'z', clockwise = true) {
     let axes = []

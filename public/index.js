@@ -1,5 +1,5 @@
 const Mo = require('../src')
 
-let test = Mo.Point([1, 2, 3]).getPointByVector([1, 1, 0], Math.pow(2, 0.5))
+let test = Mo.Point([0, 0, 0]).getPointsBesideConnection([1, 1, 0], 0.5, 0.5)
 
 console.log(test)
