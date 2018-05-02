@@ -24,6 +24,9 @@ or
 * getDistance
 * getPointByVector
 * getPointByPoint
+* getMiddlePoint
+* getPointsBesideConnection
+* getPointsBesideMiddlePoint
 * getVector
 
 ### [Vector 矢量类](https://github.com/xiaoda/math-object/wiki/Vector-%E7%9F%A2%E9%87%8F%E7%B1%BB)
