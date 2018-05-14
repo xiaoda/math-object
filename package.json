@@ -27,6 +27,10 @@
   ],
   "author": "xiaoda",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/xiaoda/math-object/issues"
+  },
+  "homepage": "https://github.com/xiaoda/math-object#readme",
   "dependencies": {
     "xdhelper": "^2.1.0"
   },
