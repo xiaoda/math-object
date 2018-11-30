@@ -24,10 +24,10 @@ describe('MoPoint', () => {
     })
   })
 
-  describe('#getDistance()', () => {
+  describe('#getDistanceByPoint()', () => {
     it('normal', () => {
       assert.equal(
-        Mo.Point([1, 2, 3]).getDistance([2, 3, 4]),
+        Mo.Point([1, 2, 3]).getDistanceByPoint([2, 3, 4]),
         Math.pow(3, 0.5)
       )
     })
@@ -75,9 +75,9 @@ describe('MoPoint', () => {
     })
   })
 
-  describe('#getMiddlePoint()', () => {
+  describe('#getMiddlePointByPoint()', () => {
     it('normal', (done, fail) => {
-      let point = Mo.Point([1, 2, 3]).getMiddlePoint([2, 3, 4])
+      let point = Mo.Point([1, 2, 3]).getMiddlePointByPoint([2, 3, 4])
       if (
         point.props.x === 1.5 &&
         point.props.y === 2.5 &&
@@ -117,9 +117,9 @@ describe('MoPoint', () => {
     })
   })
 
-  describe('#getVector()', () => {
+  describe('#getVectorByPoint()', () => {
     it('normal', (done) => {
-      let vector = Mo.Point([1, 2, 3]).getVector([3, 5, 7])
+      let vector = Mo.Point([1, 2, 3]).getVectorByPoint([3, 5, 7])
       if (
         vector.props.x === 2 &&
         vector.props.y === 3 &&

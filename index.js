@@ -307,11 +307,11 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
  */
 
 var helper = __webpack_require__(0);
-var util = __webpack_require__(5);
+var utils = __webpack_require__(5);
 var MoPoint = __webpack_require__(6);
 var MoVector = __webpack_require__(2);
 
-var Mo = _extends({}, util);
+var Mo = _extends({}, utils);
 
 Mo.Point = function () {
   for (var _len = arguments.length, params = Array(_len), _key = 0; _key < _len; _key++) {
@@ -328,7 +328,6 @@ Mo.Vector = function () {
   return new (Function.prototype.bind.apply(MoVector, [null].concat(params)))();
 };
 
-Object.freeze(Mo);
 module.exports = Mo;
 
 /***/ }),
@@ -430,9 +429,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var xdType = {
   getType: function getType(obj) {
-    if (Number.isNaN(obj)) return 'NaN';
-    if (typeof obj === 'number' && !Number.isFinite(obj)) return 'Infinity';
+    if (Number.isNaN(obj)) return 'nan';
+    if (typeof obj === 'number' && !Number.isFinite(obj)) return 'infinity';
     if (obj === null) return String(obj);else if ((typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) !== 'object') return typeof obj === 'undefined' ? 'undefined' : _typeof(obj);else return Object.prototype.toString.call(obj).toLowerCase().match(/\[\s*object\s*([^\]]*)\s*\]/)[1];
+  },
+  isBool: function isBool(obj) {
+    return this.getType(obj) === 'boolean';
   },
   isStr: function isStr(obj) {
     return this.getType(obj) === 'string';
@@ -440,20 +442,11 @@ var xdType = {
   isNum: function isNum(obj) {
     return this.getType(obj) === 'number';
   },
-  isArr: function isArr(obj) {
-    return this.getType(obj) === 'array';
-  },
-  isObj: function isObj(obj) {
-    return this.getType(obj) === 'object';
-  },
-  isFunc: function isFunc(obj) {
-    return this.getType(obj) === 'function';
+  isInfinity: function isInfinity(obj) {
+    return this.getType(obj) === 'infinity';
   },
   isReg: function isReg(obj) {
     return this.getType(obj) === 'regexp';
-  },
-  isBool: function isBool(obj) {
-    return this.getType(obj) === 'boolean';
   },
   isDate: function isDate(obj) {
     return this.getType(obj) === 'date';
@@ -461,17 +454,29 @@ var xdType = {
   isNull: function isNull(obj) {
     return this.getType(obj) === 'null';
   },
+  isObj: function isObj(obj) {
+    return this.getType(obj) === 'object';
+  },
+  isArr: function isArr(obj) {
+    return this.getType(obj) === 'array';
+  },
+  isFunc: function isFunc(obj) {
+    return this.getType(obj) === 'function';
+  },
+  isDef: function isDef(obj) {
+    return this.getType(obj) !== 'undefined';
+  },
   isUndef: function isUndef(obj) {
     return this.getType(obj) === 'undefined';
+  },
+  toBool: function toBool(obj) {
+    return !!obj;
   },
   toStr: function toStr(obj) {
     return String(obj);
   },
   toNum: function toNum(obj) {
     return Number(obj);
-  },
-  toBool: function toBool(obj) {
-    return !!obj;
   },
   objToArr: function objToArr(obj) {
     return Object.keys(obj).map(function (key) {
@@ -729,7 +734,7 @@ var xdObject = {
     return Object.keys(obj).length;
   },
   hasObjKey: function hasObjKey(obj, key) {
-    return !xdType.isUndef(obj[key]);
+    return xdType.isDef(obj[key]);
   },
   isObjEmpty: function isObjEmpty(obj) {
     return !this.getObjLen(obj);
@@ -742,14 +747,19 @@ var xdObject = {
   },
   forEachObj: function forEachObj(obj, callback) {
     var keys = Object.keys(obj);
-    var index = 0;
 
-    keys.forEach(function (key, index) {
-      callback(obj[key], key, index);
-      index++;
+    keys.forEach(function (key) {
+      callback(obj[key], key, obj);
     });
 
     return keys.length;
+  },
+  mapObj: function mapObj(obj, callback) {
+    var keys = Object.keys(obj);
+
+    return keys.map(function (key) {
+      return callback(obj[key], key, obj);
+    });
   }
 };
 
@@ -822,9 +832,11 @@ module.exports = xdChain;
  * 
  */
 
+var xdType = __webpack_require__(0);
+
 var xdDevice = {
   getUserAgent: function getUserAgent() {
-    return window.navigator.userAgent;
+    return xdType.isDef(window) ? window.navigator.userAgent : '';
   },
   isMobile: function isMobile() {
     var userAgent = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.getUserAgent();
@@ -918,6 +930,8 @@ module.exports = xdFunction;
 "use strict";
 
 
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 /**
  * 算术模块
  *
@@ -928,7 +942,7 @@ var xdType = __webpack_require__(0);
 var xdArr = __webpack_require__(1);
 
 var xdMath = {
-  sum: function sum() {
+  getSum: function getSum() {
     for (var _len = arguments.length, arr = Array(_len), _key = 0; _key < _len; _key++) {
       arr[_key] = arguments[_key];
     }
@@ -939,7 +953,7 @@ var xdMath = {
       return result + xdType.toNum(num);
     });
   },
-  product: function product() {
+  getProduct: function getProduct() {
     for (var _len2 = arguments.length, arr = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
       arr[_key2] = arguments[_key2];
     }
@@ -950,19 +964,19 @@ var xdMath = {
       return result * xdType.toNum(num);
     });
   },
-  mean: function mean() {
+  getMean: function getMean() {
     for (var _len3 = arguments.length, arr = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
       arr[_key3] = arguments[_key3];
     }
 
     if (xdType.isArr(arr[0])) arr = arr[0];
 
-    var sum = this.sum(arr);
+    var sum = this.getSum(arr);
     var count = arr.length;
 
     return sum / count;
   },
-  medium: function medium() {
+  getMedium: function getMedium() {
     for (var _len4 = arguments.length, arr = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
       arr[_key4] = arguments[_key4];
     }
@@ -977,28 +991,32 @@ var xdMath = {
     } else {
       var mediumA = sortedArr[sortedArr.length / 2 - 1];
       var mediumB = sortedArr[sortedArr.length / 2];
-      result = this.mean(mediumA, mediumB);
+      result = this.getMean(mediumA, mediumB);
     }
 
     return result;
   },
-  map: function map(num, rangeA, rangeB) {
-    num = xdType.toNum(num);
-    var startA = xdType.toNum(rangeA[0]);
-    var endA = xdType.toNum(rangeA[1]);
-    var startB = xdType.toNum(rangeB[0]);
-    var endB = xdType.toNum(rangeB[1]);
-
-    return startB + (num - startA) / (endA - startA) * (endB - startB);
-  },
-  random: function random(range) {
+  getRandom: function getRandom(range) {
     var decimal = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
-    var start = xdType.toNum(range[0]);
-    var end = xdType.toNum(range[1]);
-    var random = this.map(Math.random(), [0, 1], [start, end]);
+    var random = this.map(Math.random(), [0, 1], range);
 
     return decimal === -1 ? random : random.toFixed(decimal);
+  },
+  mapRange: function mapRange(num, rangeA, rangeB) {
+    num = xdType.toNum(num);
+
+    var _rangeA$map = rangeA.map(xdType.toNum),
+        _rangeA$map2 = _slicedToArray(_rangeA$map, 2),
+        startA = _rangeA$map2[0],
+        endA = _rangeA$map2[1];
+
+    var _rangeB$map = rangeB.map(xdType.toNum),
+        _rangeB$map2 = _slicedToArray(_rangeB$map, 2),
+        startB = _rangeB$map2[0],
+        endB = _rangeB$map2[1];
+
+    return startB + (num - startA) / (endA - startA) * (endB - startB);
   }
 };
 
@@ -1020,29 +1038,70 @@ module.exports = xdMath;
 var xdType = __webpack_require__(0);
 
 var xdString = {
+  _preProcessStringModulesParams: function _preProcessStringModulesParams() {
+    var strs = [];
+    var force = false;
+
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    if (xdType.isArr(args[0])) {
+      strs = args[0];
+      if (xdType.isDef(args[1])) force = args[1];
+    } else {
+      if (xdType.isBool(args[args.length - 1])) {
+        force = args[args.length - 1];
+        args.pop();
+      }
+      strs = args;
+    }
+
+    return { strs: strs, force: force };
+  },
   isStrEmpty: function isStrEmpty(str) {
     return !str.length;
   },
   capitalize: function capitalize(str) {
+    var force = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+    if (force) str = str.toLowerCase();
     return str.replace(/\b[a-z]/g, function (s) {
       return s.toUpperCase();
     });
   },
-  camelCase: function camelCase(strs) {
+  camelCase: function camelCase() {
     var _this = this;
 
+    var _preProcessStringModu = this._preProcessStringModulesParams.apply(this, arguments),
+        strs = _preProcessStringModu.strs,
+        force = _preProcessStringModu.force;
+
     return strs.map(function (str, index) {
+      if (force) str = str.toLowerCase();
       return index ? _this.capitalize(str) : str;
     }).join('');
   },
-  capitalCamelCase: function capitalCamelCase(strs) {
+  capitalCamelCase: function capitalCamelCase() {
     var _this2 = this;
 
+    var _preProcessStringModu2 = this._preProcessStringModulesParams.apply(this, arguments),
+        strs = _preProcessStringModu2.strs,
+        force = _preProcessStringModu2.force;
+
     return strs.map(function (str) {
+      if (force) str = str.toLowerCase();
       return _this2.capitalize(str);
     }).join('');
   },
-  kebabCase: function kebabCase(strs) {
+  kebabCase: function kebabCase() {
+    var _preProcessStringModu3 = this._preProcessStringModulesParams.apply(this, arguments),
+        strs = _preProcessStringModu3.strs,
+        force = _preProcessStringModu3.force;
+
+    if (force) strs = strs.map(function (str) {
+      return str.toLowerCase();
+    });
     return strs.join('-');
   },
   fillZero: function fillZero(num) {
@@ -1050,19 +1109,16 @@ var xdString = {
     var direction = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'left';
 
     var numText = xdType.toStr(num);
-    var len = numText.length;
     var result = void 0;
 
-    if (len >= width) {
-      result = numText;
-    } else {
-      var zeros = '0'.repeat(width - len);
+    switch (direction) {
+      case 'left':
+        result = numText.padStart(width, '0');
+        break;
 
-      if (direction === 'left') {
-        result = '' + zeros + numText;
-      } else {
-        result = '' + numText + zeros;
-      }
+      case 'right':
+        result = numText.padEnd(width, '0');
+        break;
     }
 
     return result;
@@ -1077,6 +1133,8 @@ module.exports = xdString;
 
 "use strict";
 
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 /**
  * url模块
@@ -1097,17 +1155,21 @@ var xdUrl = {
 
     return queryArr.length ? '?' + queryArr.join('&') : '';
   },
-  getQueryParam: function getQueryParam() {
-    var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : window.location.search;
-
+  getQueryParam: function getQueryParam(url) {
     var queryArr = void 0;
     var queryObj = {};
 
-    if (!url) queryArr = [];else if (url.charAt(0) === '?') queryArr = url.slice(1).split('&');else queryArr = url.split('&');
+    if (!url && xdType.isDef(window)) url = window.location.search;
 
-    queryArr.forEach(function (item, key) {
-      var arr = item.split('=');
-      queryObj[arr[0]] = xdType.isNum(xdType.toNum(arr[1])) ? xdType.toNum(arr[1]) : arr[1];
+    if (!url) queryArr = [];else if (url.startsWith('?')) queryArr = url.slice(1).split('&');else queryArr = url.split('&');
+
+    queryArr.forEach(function (item) {
+      var _item$split = item.split('='),
+          _item$split2 = _slicedToArray(_item$split, 2),
+          key = _item$split2[0],
+          val = _item$split2[1];
+
+      queryObj[key] = xdType.isNum(xdType.toNum(val)) ? xdType.toNum(val) : val;
     });
 
     return queryObj;
@@ -1143,7 +1205,6 @@ var xdUrl = __webpack_require__(8);
 
 var xd = _extends({}, xdArray, xdChain, xdDevice, xdFunction, xdMath, xdObject, xdString, xdType, xdUrl);
 
-Object.freeze(xd);
 module.exports = xd;
 
 /***/ })
@@ -1166,7 +1227,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 var helper = __webpack_require__(0);
 
-var util = {
+var utils = {
 
   /* 获取相反数 */
   getOpposite: function getOpposite(num) {
@@ -1271,7 +1332,7 @@ var util = {
   }
 };
 
-module.exports = util;
+module.exports = utils;
 
 /***/ }),
 /* 6 */
@@ -1356,11 +1417,11 @@ var MoPoint = function (_MoBase) {
     /* 预处理 */
 
   }, {
-    key: 'getDistance',
+    key: 'getDistanceByPoint',
 
 
     /* 获取点到点的距离 */
-    value: function getDistance(point) {
+    value: function getDistanceByPoint(point) {
       point = MoPoint.initPoint(point);
 
       return Math.pow(Math.pow(this.props.x - point.props.x, 2) + Math.pow(this.props.y - point.props.y, 2) + Math.pow(this.props.z - point.props.z, 2), 0.5);
@@ -1404,8 +1465,8 @@ var MoPoint = function (_MoBase) {
     /* 根据点获取中点 */
 
   }, {
-    key: 'getMiddlePoint',
-    value: function getMiddlePoint(point) {
+    key: 'getMiddlePointByPoint',
+    value: function getMiddlePointByPoint(point) {
       return this.getPointByPoint(point, 0.5);
     }
 
@@ -1416,15 +1477,15 @@ var MoPoint = function (_MoBase) {
     value: function getPointsBesideConnection(point, firstRatio, secondRatio) {
       point = MoPoint.initPoint(point);
       var specificPoint = this.getPointByPoint(point, firstRatio);
-      var distance = this.getDistance(point);
-      var vector = this.getVector(point);
+      var distance = this.getDistanceByPoint(point);
+      var vector = this.getVectorByPoint(point);
       var verticalVector = vector.getVerticalVector();
       var oppositeVector = verticalVector.getOppositeVector();
 
       return [specificPoint.getPointByVector(verticalVector, distance * secondRatio), specificPoint.getPointByVector(oppositeVector, distance * secondRatio)];
     }
 
-    /* 根据点获取终点两侧的点 */
+    /* 根据点获取中点两侧的点 */
 
   }, {
     key: 'getPointsBesideMiddlePoint',
@@ -1435,8 +1496,8 @@ var MoPoint = function (_MoBase) {
     /* 根据点获取矢量 */
 
   }, {
-    key: 'getVector',
-    value: function getVector(point) {
+    key: 'getVectorByPoint',
+    value: function getVectorByPoint(point) {
       point = MoPoint.initPoint(point);
 
       return new MoVector({

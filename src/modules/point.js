@@ -47,7 +47,7 @@ class MoPoint extends MoBase {
   }
 
   /* 获取点到点的距离 */
-  getDistance (point) {
+  getDistanceByPoint (point) {
     point = MoPoint.initPoint(point)
 
     return (
@@ -93,7 +93,7 @@ class MoPoint extends MoBase {
   }
 
   /* 根据点获取中点 */
-  getMiddlePoint (point) {
+  getMiddlePointByPoint (point) {
     return this.getPointByPoint(point, 0.5)
   }
 
@@ -101,8 +101,8 @@ class MoPoint extends MoBase {
   getPointsBesideConnection (point, firstRatio, secondRatio) {
     point = MoPoint.initPoint(point)
     let specificPoint = this.getPointByPoint(point, firstRatio)
-    let distance = this.getDistance(point)
-    let vector = this.getVector(point)
+    let distance = this.getDistanceByPoint(point)
+    let vector = this.getVectorByPoint(point)
     let verticalVector = vector.getVerticalVector()
     let oppositeVector = verticalVector.getOppositeVector()
 
@@ -118,7 +118,7 @@ class MoPoint extends MoBase {
   }
 
   /* 根据点获取矢量 */
-  getVector (point) {
+  getVectorByPoint (point) {
     point = MoPoint.initPoint(point)
 
     return new MoVector({

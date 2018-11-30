@@ -4,7 +4,7 @@
 
 const helper = require('./helper')
 
-const util = {
+const utils = {
 
   /* 获取相反数 */
   getOpposite (num) {
@@ -77,4 +77,4 @@ const util = {
   }
 }
 
-module.exports = util
+module.exports = utils
